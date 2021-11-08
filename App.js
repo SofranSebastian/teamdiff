@@ -1,15 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import AppMainStack from './routes/routes';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
+
+import * as firebase from "firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB5V08qRzexHyofw1aEqVnlhfuxHMqxty4",
@@ -21,32 +20,43 @@ const firebaseConfig = {
   measurementId: "G-HEFWSMX049"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-const getUsers = async(db) => {
-  const usersCol = collection(db, 'users');
-  const userSnapshot = await getDocs(usersCol);
-  const userList = userSnapshot.docs.map(user => user.data());
-  return userList;
-}
+const customFonts = {
+  'normal-font' : require('./fonts/Proxima-Nova-Font.otf'),
+};
 
-getUsers(db).then((users) => {
-  users.forEach(user => {
-    console.log(user);
-  });
-}).catch(err => {
-  console.log(err);
-});
+export default class App extends React.Component {
+  
+  constructor(){
+    super();
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    this.state = {
+      areFontsLoaded: false,
+    }
+  }
+
+  async _loadFontsAsync(){
+    await Font.loadAsync( customFonts );
+    this.setState({ areFontsLoaded: true });
+  }
+
+  async componentDidMount(){
+    this._loadFontsAsync();
+    firebase.initializeApp( firebaseConfig );
+  }
+
+  render(){
+    if( this.state.areFontsLoaded ){
+      return(
+        <AppMainStack />
+      )
+    }else{
+      return(
+        <AppLoading />
+      )
+    }
+  }
+
 }
 
 const styles = StyleSheet.create({
