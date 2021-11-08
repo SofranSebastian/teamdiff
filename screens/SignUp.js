@@ -20,8 +20,9 @@ export default class SignUp extends React.Component{
                                     }} 
                 >
                     <View style={{flex:0.40}}></View>
-                    <View style={{flex:0.40}}>
+                    <View style={{flex:0.40, justifyContent:'center', alignItems: 'center'}}>
                         <TextInput
+                            style={{backgroundColor:"white", width:"90%"}}
                             outlineColor="#262731"
                             activeOutlineColor="#262731"
                             mode="outlined"
@@ -29,11 +30,17 @@ export default class SignUp extends React.Component{
                             placeholder="Type something"
                         />
                         <TextInput
+                            style={{backgroundColor:"white", width:"90%"}}
+                            outlineColor="#262731"
+                            activeOutlineColor="#262731"
                             mode="outlined"
                             label="Email"
                             placeholder="Type something"
                         />
                         <TextInput
+                            style={{backgroundColor:"white", width:"90%"}}
+                            outlineColor="#262731"
+                            activeOutlineColor="#262731"
                             mode="outlined"
                             label="Password"
                             placeholder="Type something"
