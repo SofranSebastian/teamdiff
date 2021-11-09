@@ -28,6 +28,10 @@ export default class SignUp extends React.Component{
         console.log("Am apasat pe sign up");
     }
 
+    _onAlreadyAStackerPress = () => {
+        console.log("Am apasat pe Already a stacker");
+    }
+
     render(){
         return(
             <View style={{ flex:1, backgroundColor: 'red' }}>
@@ -80,6 +84,15 @@ export default class SignUp extends React.Component{
                                 onPress = { this._onSignUpPress }
                         >
                             SIGN UP
+                        </Button>
+                        <Button style = {{marginTop:"3%"}}
+                                color = "#262731"
+                                mode = "text"
+                                onPress = { this._onAlreadyAStackerPress }
+                        >
+                            <Text style={{fontFamily:'normal-font', fontSize:10}}>
+                                Already a stacker? <Text style={{fontWeight:"bold"}}>LOGIN</Text>
+                            </Text>    
                         </Button>
                     </View>
                     <View style={{flex:0.10}}></View>
