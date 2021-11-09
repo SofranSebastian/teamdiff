@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SignUp from "../screens/SignUp";
+import LogIn from "../screens/LogIn";
 
 const MainStack = createNativeStackNavigator();
 
@@ -13,12 +14,21 @@ function AppMainStack() {
         <NavigationContainer>
             <MainStack.Navigator>
                 <MainStack.Screen   name = "SignUp"
-                                component = { SignUp }
-                                options = {
-                                    ({ navigation, route }) => ({
-                                        headerShown: false,
-                                    })
-                                }
+                                    component = { SignUp }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown: false,
+                                        })
+                                    }
+
+                />
+                <MainStack.Screen   name = "LogIn"
+                                    component = { LogIn }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown: false,
+                                        })
+                                    }
 
                 />
             </MainStack.Navigator>
