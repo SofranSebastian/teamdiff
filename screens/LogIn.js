@@ -11,7 +11,7 @@ export default class SignUp extends React.Component{
 
         this.state = {
             isPasswordVisible: true,
-            iconNamePassword: "eye",
+            iconNamePassword: "eye-off",
         }
     }
 
@@ -24,7 +24,7 @@ export default class SignUp extends React.Component{
         }
     }
 
-    _onSignUpPress = () => {
+    _onLogInPress = () => {
         console.log("Am apasat pe log in");
     }
 
@@ -44,36 +44,26 @@ export default class SignUp extends React.Component{
                     <View style={{flex:0.35}}></View>
                     <View style={{flex:0.55, justifyContent:'center', alignItems: 'center'}}>
                         <TextInput
-                            theme={{ roundness: 20 }} 
-                            style={{backgroundColor:"white", width:"90%"}}
-                            outlineColor="#262731"
-                            activeOutlineColor="#262731"
+                            theme={{ roundness: 20, colors: { text:'white', placeholder:'white'  } }}
+                            style={{backgroundColor:"#262731", width:"90%"}}
+                            outlineColor="white"
+                            activeOutlineColor="white"
                             mode="outlined"
                             label="Username"
                             placeholder="Please type your username"
-                            right={<TextInput.Icon name="account-check" color="#262731" />}
-                        />
-                        <TextInput
-                            theme={{ roundness: 20 }} 
-                            style={{backgroundColor:"white", width:"90%", marginTop:"5%"}}
-                            outlineColor="#262731"
-                            activeOutlineColor="#262731"
-                            mode="outlined"
-                            label="Email"
-                            placeholder="Please type your email"
-                            right={<TextInput.Icon name="email" color="#262731" />}
+                            right={<TextInput.Icon name="account-check" color="white" />}
                         />
                         <TextInput
                             secureTextEntry={ this.state.isPasswordVisible }
-                            theme={{ roundness: 20 }} 
-                            style={{backgroundColor:"white", width:"90%", marginTop:"5%"}}
-                            outlineColor="#262731"
-                            activeOutlineColor="#262731"
+                            theme={{ roundness: 20, colors: { text:'white', placeholder:'white'  } }}
+                            style={{backgroundColor:"#262731", width:"90%", marginTop:"5%"}}
+                            outlineColor="white"
+                            activeOutlineColor="white"
                             mode="outlined"
                             label="Password"
                             placeholder="Please type your password"
                             right={ <TextInput.Icon     name={ this.state.iconNamePassword } 
-                                                        color="#262731" 
+                                                        color="white" 
                                                         onPress = { this._onPasswordIconPress }
                                     />
                             }
@@ -82,9 +72,9 @@ export default class SignUp extends React.Component{
                                 theme={{ roundness: 20 }}
                                 mode="contained"
                                 
-                                onPress = { this._onSignUpPress }
+                                onPress = { this._onLogInPress }
                         >
-                            <Text style={{color:"#262731"}}>SIGN UP</Text>
+                            <Text style={{color:"#262731"}}>LOG IN</Text>
                         </Button>
                         <Button style = {{marginTop:"3%"}}
                                 color = "white"
