@@ -29,7 +29,7 @@ export default class SignUp extends React.Component{
     }
 
     _onAlreadyAStackerPress = () => {
-        console.log("Am apasat pe Already a stacker");
+        this.props.navigation.navigate("LogIn");
     }
 
     render(){
