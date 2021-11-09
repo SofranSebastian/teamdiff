@@ -11,7 +11,7 @@ export default class SignUp extends React.Component{
 
         this.state = {
             isPasswordVisible: true,
-            iconNamePassword: "eye",
+            iconNamePassword: "eye-off",
         }
     }
 
