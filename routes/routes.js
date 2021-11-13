@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SignUp from "../screens/SignUp";
 import LogIn from "../screens/LogIn";
+import Home from "../screens/Home";
 
 const MainStack = createNativeStackNavigator();
 
@@ -24,6 +25,15 @@ function AppMainStack() {
                 />
                 <MainStack.Screen   name = "LogIn"
                                     component = { LogIn }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown: false,
+                                        })
+                                    }
+
+                />
+                <MainStack.Screen   name = "Home"
+                                    component = { Home }
                                     options = {
                                         ({ navigation, route }) => ({
                                             headerShown: false,
