@@ -1,4 +1,4 @@
-# STACKLY
+# ![logo](https://user-images.githubusercontent.com/25872149/141652989-cdb75e5e-d436-4677-b30a-ebf1e84ef812.png)
 
 STACKLY is a mobile application developed as a project for University which aims to create an environment for all people passionate about the programming world.
 
@@ -10,6 +10,7 @@ Technologies used:
   - Firebase as Baas
 
 # Arhitecture Diagram
+
 
 
 # Run it
