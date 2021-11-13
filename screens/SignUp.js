@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, ImageBackground, } from 'react-native';
 import { TextInput, Button, HelperText } from 'react-native-paper';
-
+import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth';
 import { usersCol } from "../db/firebaseDB";
 import { getFirestore, collection, getDocs, addDoc, doc, query, where, updateDoc, arrayUnion } from 'firebase/firestore';
 
@@ -27,15 +27,17 @@ export default class SignUp extends React.Component{
             usernameFromInput:'',
             passwordFromInput:'',
             emailFromInput:'',
-
-            newUser:{   username: '', 
-                        password: '', 
-                        email: '', 
-                        bugs: [], 
-                        bugsAsked: 0, 
-                        bugsFixed: 0, 
-                        bugsScore: 100
-            },
+            bugs: [],
+            bugsAsked: 0,
+            bugsFixed: 0,
+            bugsScore: 100,
+            // newUser:{   username: '',  
+            //             email: '', 
+            //             bugs: [], 
+            //             bugsAsked: 0, 
+            //             bugsFixed: 0, 
+            //             bugsScore: 100
+            // },
         }
     }
 
@@ -89,7 +91,7 @@ export default class SignUp extends React.Component{
 
     _checkPassword = ( password ) => {
 
-        var regEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        var regEx = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         if( password.match(regEx) ){
             this.setState({ errorFromPasswordInput: false });
@@ -104,30 +106,39 @@ export default class SignUp extends React.Component{
     }
 
     async _onSignUpPress(){
-      
         if( this._checkUsername( this.state.usernameFromInput ) ){
             if( this._checkEmail( this.state.emailFromInput ) ){
                 if( this._checkPassword( this.state.passwordFromInput ) ){
-                        await this.setState( {
-                            newUser:{    username: this.state.usernameFromInput, 
-                                        password: this.state.passwordFromInput, 
-                                        email: this.state.emailFromInput, 
-                                        bugs: [], 
-                                        bugsAsked: 0, 
-                                        bugsFixed: 0, 
-                                        bugsScore: 100
-                            }
-                        });
-
-                        console.log(this.state.newUser);
                     
+                    let newUser = {
+                        username: this.state.usernameFromInput,
+                        email: this.state.emailFromInput,
+                        bugs: this.state.bugs,
+                        bugsAsekd: this.state.bugsAsked,
+                        bugsFixed: this.state.bugsFixed,
+                        bugsScore: this.state.bugsScore,
+                    }
+                    
+                    const auth = getAuth();
 
-                    let userRef = addDoc(usersCol, this.state.newUser );
-                        userRef.then(   userData => {
-                                        this._goToLoginScreen()
-                        }).catch(err => {
-                                        console.log(err);
-                        });
+                    console.log(this.state.emailFromInput, this.state.passwordFromInput);
+                    await createUserWithEmailAndPassword(auth, this.state.emailFromInput, this.state.passwordFromInput)
+                        .then(() => {
+                            console.log("User added to Auth successfully.");
+                            let userRef = addDoc(usersCol, newUser );
+                    
+                            if (userRef) {
+                                this._goToLoginScreen();
+                            }
+                            else {
+                                console.log("Error in adding the user to the users collection.");
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error.message);
+                            this.emailErrorMessage = "Account already associated with this email.";
+                            this.setState({errorFromEmailInput: true})
+                        })
                 }
             }
         }
@@ -162,7 +173,7 @@ export default class SignUp extends React.Component{
                             placeholder="Please type your username"
                             right={<TextInput.Icon name="account-check" color="#262731" />}
                             onChangeText={  
-                                async( username ) => this.setState({ usernameFromInput: username })
+                                ( username ) => this.setState({ usernameFromInput: username.trim().toLowerCase() })
                             }
                         />
                         <HelperText type="error" visible={ this.state.errorFromUsernameInput }>
@@ -179,7 +190,7 @@ export default class SignUp extends React.Component{
                             placeholder="Please type your email"
                             right={<TextInput.Icon name="email" color="#262731" />}
                             onChangeText={  
-                                async( email ) => this.setState({ emailFromInput: email})
+                                ( email ) => this.setState({ emailFromInput: email})
                             }
                         />
                         <HelperText type="error" visible={ this.state.errorFromEmailInput }>
@@ -201,7 +212,7 @@ export default class SignUp extends React.Component{
                                     />
                             }
                             onChangeText={  
-                                async( password ) => this.setState({ passwordFromInput: password })
+                                ( password ) => this.setState({ passwordFromInput: password })
                             }
                         />
                         <HelperText  type="error" visible={ this.state.errorFromPasswordInput } style={{width:'90%'}}>
@@ -210,7 +221,7 @@ export default class SignUp extends React.Component{
                         <Button style={{backgroundColor:"#262731", marginTop:"10%", width:"40%", height: 40}}
                                 theme={{ roundness: 20 }}
                                 mode="contained"
-                                onPress = { () => this._onSignUpPress() }
+                                onPress = { async () => this._onSignUpPress() }
                         >
                             SIGN UP
                         </Button>
