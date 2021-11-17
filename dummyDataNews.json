@@ -1,0 +1,265 @@
+{
+    "message": "technology",
+    "news": [
+        {
+            "source": {
+                "id": null,
+                "name": "Kotaku"
+            },
+            "author": "Ari Notis",
+            "title": "A Fully 3D Version Is Hiding Within 2D Metroid Dread - Kotaku",
+            "description": "It's not Metroid Prime 4, but Boundary Break's new video is still pretty cool",
+            "url": "https://kotaku.com/a-fully-3d-version-is-hiding-within-2d-metroid-dread-1848075329",
+            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/82a2f161dc95245c978fc7984465816a.jpg",
+            "publishedAt": "2021-11-17T17:30:00Z",
+            "content": "Smart games use smart short-cuts to fool our eyes. Hidden assets. Camera tricks. On-the-fly rendering. Yes, every video game is an exercise in perception, and Nintendos Metroid Dread is no exception.… [+2622 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Antonio G. Di Benedetto",
+            "title": "PS5 consoles are available right now at Verizon - The Verge",
+            "description": "The PlayStation 5 continues to be one of the most difficult consoles to get, but Verizon has recently opened up orders and is releasing stock in waves to its customers. Here is how you can get your chance for a disc-based PS5.",
+            "url": "https://www.theverge.com/good-deals/2021/11/17/22759382/playstation-5-restock-availability-verizon-order-where-to-buy",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/3r_9jS6Nm_SkLMLo7HhJ0hPTZNc=/0x146:2040x1214/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/22509875/acastro_210511_1777_psRestock_0006.jpg",
+            "publishedAt": "2021-11-17T17:27:25Z",
+            "content": "The carrier has gotten into the restock game\r\nIf you buy something from a Verge link, Vox Media may earn a commission. See our ethics statement.\r\nIllustration by Alex Castro / The Verge\r\nThis story i… [+2959 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Chris Welch",
+            "title": "Amazon Fire TV Omni review: useful Alexa features, underwhelming picture - The Verge",
+            "description": "You’re better off just buying a different TV and Fire TV Stick.",
+            "url": "https://www.theverge.com/22785648/amazon-fire-tv-omni-review-alexa",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/xwxS1P4Mw4XDMOAG1ynXHTBwRWU=/0x150:2040x1218/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/23019531/DSCF6059.jpg",
+            "publishedAt": "2021-11-17T17:23:40Z",
+            "content": "If you buy something from a Verge link, Vox Media may earn a commission. See our ethics statement.Youd expect a lot from Amazons first self-branded TVs. After building a successful hardware business … [+8462 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "Gizmodo.com"
+            },
+            "author": "Shoshana Wodinsky",
+            "title": "The 200 Worst Passwords of 2021 Are Here and Oh My God - Gizmodo",
+            "description": "This year's top slots featured obvious winners like \"1234\" and \"12345,\" which can be cracked in less than a second.",
+            "url": "https://gizmodo.com/the-200-worst-passwords-of-2021-are-here-and-oh-my-god-1848073946",
+            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/ba2489081b15d6b96cb1e72f9fb4745f.jpg",
+            "publishedAt": "2021-11-17T17:10:00Z",
+            "content": "After a year filled with massive hacks and lord-knows how many exploits, youd think we would all learn to be a bitjust a bit!more cyber-savvy as 2021 comes to a close. But if this years list of the 2… [+2672 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Jay Peters",
+            "title": "Xbox Cloud Gaming is starting to roll out to Xbox consoles - The Verge",
+            "description": "Microsoft is beginning to roll out the ability to play games via Xbox Cloud Gaming on Xbox One or Xbox Series X / S consoles. The company says it will roll out first “with our November release to a subset of Xbox gamers.”",
+            "url": "https://www.theverge.com/2021/11/17/22787396/xbox-cloud-gaming-consoles-series-x-s-one",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/JWXWjhC51lk8tba1WPBrGgn1H2w=/0x146:2040x1214/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/22012237/vpavic_201103_4275_0163.jpg",
+            "publishedAt": "2021-11-17T16:59:22Z",
+            "content": "Try a game via streaming before downloading it\r\nPhoto by Vjeran Pavic / The Verge\r\nMicrosoft is beginning to roll out the ability to play games via Xbox Cloud Gaming on Xbox One or Xbox Series X / S … [+1629 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "YouTube"
+            },
+            "author": null,
+            "title": "Alien: Isolation - Official iOS and Android Release Date Trailer - IGN",
+            "description": "Alien Isolation is headed to iOS and Android on December 16, 2021. Check out the intense trailer.Fifteen years after the unsolved disappearance of her mother...",
+            "url": "https://www.youtube.com/watch?v=WH7oKSPVzFI",
+            "urlToImage": "https://i.ytimg.com/vi/WH7oKSPVzFI/maxresdefault.jpg",
+            "publishedAt": "2021-11-17T16:52:06Z",
+            "content": null
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "Lifehacker.com"
+            },
+            "author": "Jake Peterson",
+            "title": "How to Fix Your Pixel 6's Slow Fingerprint Scanner - Lifehacker",
+            "description": "If your Pixel 6 or 6 Pro's fingerprint scanner sucks, here's how to fix it.",
+            "url": "https://lifehacker.com/how-to-fix-your-pixel-6s-slow-fingerprint-scanner-1848074145",
+            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/cfb32e816b0a394422e5c29359fb25d1.jpg",
+            "publishedAt": "2021-11-17T16:30:00Z",
+            "content": "The Pixel 6 and Pixel 6 Pro are lauded for their many features, but one common criticism for both devices surrounds the fingerprint scanner. This year, Google opted for an in-display fingerprint scan… [+1843 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "Gizmodo.com"
+            },
+            "author": "Sam Rutherford",
+            "title": "Microsoft Is Replacing Windows Media Player With an App Called... Media Player for Windows - Gizmodo",
+            "description": "But don't worry too much because Windows Media Player isn't disappearing completely.",
+            "url": "https://gizmodo.com/microsoft-is-replacing-windows-media-player-with-an-app-1848074365",
+            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/61dbea1593fead18c8f4d097799c3978.png",
+            "publishedAt": "2021-11-17T15:50:00Z",
+            "content": "The current version of Windows Media Player has been around for more than a decade. So, after all these years, Microsoft is finally pushing out a new app designed to handle everyday media playback in… [+2503 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Victoria Song",
+            "title": "The Moto Watch 100 won’t run on Wear OS - The Verge",
+            "description": "The Moto Watch 100 will forgo Wear OS in favor of Moto OS, a proprietary software, to prioritize battery life. Whether that pays off will depend on how well it works.",
+            "url": "https://www.theverge.com/2021/11/17/22787071/wearos-moto-watch-100-smartwatches",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/y9FCmOIXvyMrpzyOmQ8JbgMblK0=/81x0:2251x1136/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/23021596/one_stop_shop_for_health.jpg",
+            "publishedAt": "2021-11-17T15:21:40Z",
+            "content": "Cheap price, long battery life, but dont expect any apps\r\nThe Moto Watch 100 is opting for a proprietary OS over Wear OS.\r\nImage: eBuyNow\r\nThe original Motorola Moto 360 was one of the few good Wear … [+3050 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "9to5google.com"
+            },
+            "author": null,
+            "title": "Samsung Android 12 update: These devices have One UI 4.0 - 9to5Google",
+            "description": "Samsung is one of the first device makers to release Android 12 on its smartphones and tablets, and we have a full list of their progress.",
+            "url": "https://9to5google.com/2021/11/17/samsung-android-12-update-rollout/",
+            "urlToImage": "https://i2.wp.com/9to5google.com/wp-content/uploads/sites/4/2021/11/samsung_android_12_1.jpg?resize=1200%2C628&quality=82&strip=all&ssl=1",
+            "publishedAt": "2021-11-17T15:20:00Z",
+            "content": "Android 12 is still a very new version of the platform, but Samsung is launching the update for its Galaxy devices less than a month after Google’s own Pixel phones. More devices will be updated over… [+6313 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "YouTube"
+            },
+            "author": null,
+            "title": "'Halo Infinite' Multiplayer Is Great Except For One Glaring Problem | Erik Kain | Forbes - Forbes",
+            "description": "Halo Infinite's free multiplayer launched three weeks early to celebrate the 20th anniversary of the Xbox and original Halo. So far, the game is excellent ex...",
+            "url": "https://www.youtube.com/watch?v=-phWf7cSiWc",
+            "urlToImage": "https://i.ytimg.com/vi/-phWf7cSiWc/maxresdefault.jpg",
+            "publishedAt": "2021-11-17T15:00:01Z",
+            "content": null
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Jon Porter",
+            "title": "Amazon’s Echo Show 15 goes up for preorder, shipping December 9th - The Verge",
+            "description": "Amazon is opening up preorders for the Echo Show 15. The $249.99 device has a 15.6-inch 1080p touchscreen that can be oriented in portrait or landscape. Shipping will begin on December 9th.",
+            "url": "https://www.theverge.com/2021/11/17/22786975/amazon-echo-show-15-release-date-preorder-smart-display-alexa",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/Gc8BuIU3apZe2EZPSIEUfBEvCAQ=/0x156:8000x4344/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/22883473/echo_show_15_media_lifestyle_6.png",
+            "publishedAt": "2021-11-17T15:00:00Z",
+            "content": "Two months on from its announcement in September\r\nIf you buy something from a Verge link, Vox Media may earn a commission. See our ethics statement.\r\nAmazons Echo Show 15.\r\nPhoto: Amazon\r\nToday, Amaz… [+1189 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "RoadandTrack.com"
+            },
+            "author": "Chris Perkins",
+            "title": "Why the Porsche 718 Cayman GT4 RS Still Can’t Beat the 911 GT3 Around the Nurburgring - RoadandTrack.com",
+            "description": "The hottest Cayman is smaller than a 911 GT3, and uses the exact same engine. But the GT3 still has an edge.",
+            "url": "https://www.roadandtrack.com/news/a38265385/porsche-718-cayman-gt4-rs-still-cant-beat-911-gt3-around-the-nurburgring/",
+            "urlToImage": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/769-106-1637086238.jpg?crop=1.00xw:0.752xh;0,0.224xh&resize=1200:*",
+            "publishedAt": "2021-11-17T14:45:38Z",
+            "content": "The Porsche 718 Cayman GT4 RS is the most track-focused mid-engine Porsche you can buy. To nobody’s surprise, it set a blistering lap time on the Nurburgring Nordschliefe. Using the traditional Sport… [+3155 chars]"
+        },
+        {
+            "source": {
+                "id": "ign",
+                "name": "IGN"
+            },
+            "author": "Jared Moore",
+            "title": "Halo Infinite: 343 Says It's Assessing Controversial Multiplayer Progression - IGN",
+            "description": "Following the launch of Halo Infinite's multiplayer mode, 343 Industries has confirmed that it's currently assessing the game's controversial multiplayer progression system.",
+            "url": "https://www.ign.com/articles/halo-infinite-343-assessing-controversial-multiplayer-progression",
+            "urlToImage": "https://assets-prd.ignimgs.com/2021/11/16/haloinfinite-presskit-09-1637046536923.jpg?width=1280",
+            "publishedAt": "2021-11-17T14:33:21Z",
+            "content": "Following the launch of Halo Infinite's multiplayer mode, 343 Industries has confirmed that it's currently assessing the game's controversial multiplayer progression system. \r\nThe announcement was ma… [+2845 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "Kotaku"
+            },
+            "author": "Ian Walker",
+            "title": "Elden Ring Players Discover Terrifying Bear Monster Beyond Demo’s Bounds - Kotaku",
+            "description": "From Software’s preview of the upcoming, open-world epic is being picked over by fans",
+            "url": "https://kotaku.com/elden-ring-players-discover-terrifying-bear-monster-bey-1848069894",
+            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/4da37b65ede11922d04841269fdb5941.png",
+            "publishedAt": "2021-11-17T14:30:00Z",
+            "content": "Not satisfied with the copious Elden Ring content provided by last weekends brief, intermittent network tests, players figured out a way to escape the bounds of the demos map and explore the lands be… [+2440 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "James Vincent",
+            "title": "YouTube co-founder predicts ‘decline’ of the platform following removal of dislikes - The Verge",
+            "description": "YouTube’s co-founder Jawed Karim has condemned the platform’s decision to remove public dislike counts. Karim edited the description of the first video uploaded to YouTube, titled “Me at the zoo,” to criticize the move.",
+            "url": "https://www.theverge.com/2021/11/17/22787080/youtube-dislikes-criticism-cofounder-jawed-karim-first-video-description-zoo",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/UpcbfgWk1254CaUhMqYSJ8BRJQM=/0x55:480x306/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/23021538/jawed_karim_at_the_zoo.jpeg",
+            "publishedAt": "2021-11-17T14:21:35Z",
+            "content": "Its a universally disliked change, says co-founder Jawed Karim\r\nYouTube co-founder Jawed Karim edited the description to YouTubes first ever video (above) to make his opinion known. \r\nImage: YouTube\r… [+4458 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "Apple Newsroom"
+            },
+            "author": null,
+            "title": "Apple announces Self Service Repair - Apple Newsroom",
+            "description": "Apple parts, tools, and manuals — starting with iPhone 12 and iPhone 13 — available to individual consumers.",
+            "url": "https://www.apple.com/newsroom/2021/11/apple-announces-self-service-repair/",
+            "urlToImage": "https://www.apple.com/newsroom/images/product/repair/standard/Apple_Self-Service-Repair_hero_11172021.jpg.og.jpg?202111171401",
+            "publishedAt": "2021-11-17T14:03:41Z",
+            "content": "November 17, 2021\r\nPRESS RELEASE\r\nApple announces Self Service Repair\r\nApple parts, tools, and manuals starting with iPhone 12 and iPhone 13 available to individual consumers\r\nCUPERTINO, CALIFORNIA A… [+4049 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "YouTube"
+            },
+            "author": null,
+            "title": "Pokémon Brilliant Diamond & Shining Pearl Nintendo Switch Review - Are They Worth It? - Nintendo Life",
+            "description": "Not so shining?Check out our full site: http://www.nintendolife.comLike us on Facebook: https://www.facebook.com/nintendolifeFollow us on Twitter: https://ww...",
+            "url": "https://www.youtube.com/watch?v=UhXw8bSC6A0",
+            "urlToImage": "https://i.ytimg.com/vi/UhXw8bSC6A0/maxresdefault.jpg",
+            "publishedAt": "2021-11-17T14:00:10Z",
+            "content": null
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Chris Welch",
+            "title": "Tidal launches free streaming and splits HiFi into two plans - The Verge",
+            "description": "Tidal has announced a free streaming plan for the first time, and the Square-owned music service is splitting its HiFi plan into two with a new “HiFi Plus” tier that’s required for Dolby Atmos and Master Quality Authenticated tracks.",
+            "url": "https://www.theverge.com/2021/11/17/22787051/tidal-free-hifi-plus-announced-features-artist-payments",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/RSBUfVpr32EVxMaJDnmQojUklFc=/0x149:2200x1301/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/23021467/tidal.jpg",
+            "publishedAt": "2021-11-17T14:00:00Z",
+            "content": "Plus the company is taking new steps to get more money to artists\r\nImage: Tidal\r\nTidal is making some significant changes to its subscription plans and introducing a free, ad-sponsored tier for the f… [+3291 chars]"
+        },
+        {
+            "source": {
+                "id": null,
+                "name": "YouTube"
+            },
+            "author": null,
+            "title": "Samsung Galaxy S22 Ultra: Most exciting rumors - CNET",
+            "description": "If the reports are true, the S22 Ultra phone is going to look a lot like the Galaxy Note, house an S-Pen and feature a wacky-looking rear camera array.Subscr...",
+            "url": "https://www.youtube.com/watch?v=027gzC5liic",
+            "urlToImage": "https://i.ytimg.com/vi/027gzC5liic/maxresdefault.jpg",
+            "publishedAt": "2021-11-17T13:00:00Z",
+            "content": null
+        }
+    ]
+}
