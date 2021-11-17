@@ -3,10 +3,13 @@ import { Text, View, ImageBackground, SafeAreaView, FlatList } from 'react-nativ
 import { TextInput, Button, HelperText } from 'react-native-paper';
 import { usersCol } from "../db/firebaseDB";
 import { getFirestore, collection, getDocs, addDoc, doc, query, where, updateDoc, arrayUnion } from 'firebase/firestore';
+import { CardNews } from "../components/CardNews";
 
 export default class Home extends React.Component {
     constructor() {
         super();
+    
+        this.data = []
     }
 
     componentDidMount(){
@@ -20,7 +23,7 @@ export default class Home extends React.Component {
             .then( 
                 (response) => response.json()
             ).then( (responseData) =>
-                console.log(responseData)
+                this.data = responseData.news
             )
             .catch(err => {
                 console.error(err);
@@ -31,9 +34,10 @@ export default class Home extends React.Component {
         return (
             <SafeAreaView style={{flex: 1}}>
                     <FlatList
-                        data={DATA}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
+                        data={ this.data }
+                        horizontal = { true }
+                        renderItem={ <CardNews /> }
+                        keyExtractor={item => item.publishedAt}
                     />
                     
                 <Text style={ {fontSize: 20} }>Home</Text>
