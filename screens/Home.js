@@ -5,6 +5,7 @@ import { usersCol } from "../db/firebaseDB";
 import { getFirestore, collection, getDocs, addDoc, doc, query, where, updateDoc, arrayUnion } from 'firebase/firestore';
 import { CardNews } from "../components/CardNews";
 
+const dummyData = require('../dummyDataNews.json')
 export default class Home extends React.Component {
     constructor() {
         super();
@@ -13,28 +14,30 @@ export default class Home extends React.Component {
     }
 
     componentDidMount(){
-        fetch(  "https://current-news.p.rapidapi.com/news/technology", {
-                "method": "GET",
-                "headers": {
-                    "x-rapidapi-host": "current-news.p.rapidapi.com",
-                    "x-rapidapi-key": "baf44d4290msh54dc398cb97add8p194c17jsn9aab1e258a32"
-                }
-            })
-            .then( 
-                (response) => response.json()
-            ).then( (responseData) =>
-                this.data = responseData.news
-            )
-            .catch(err => {
-                console.error(err);
-            });
+        // fetch(  "https://current-news.p.rapidapi.com/news/technology", {
+        //         "method": "GET",
+        //         "headers": {
+        //             "x-rapidapi-host": "current-news.p.rapidapi.com",
+        //             "x-rapidapi-key": "baf44d4290msh54dc398cb97add8p194c17jsn9aab1e258a32"
+        //         }
+        //     })
+        //     .then( 
+        //         (response) => response.json()
+        //     ).then( (responseData) => {
+        //             this.data = responseData.news
+        //             console.log(this.data)
+        //         }
+        //     )
+        //     .catch(err => {
+        //         console.error(err);
+        //     });
     }
 
     render() {
         return (
             <SafeAreaView style={{flex: 1}}>
                     <FlatList
-                        data={ this.data }
+                        data={ dummyData }
                         horizontal = { true }
                         renderItem={ <CardNews /> }
                         keyExtractor={item => item.publishedAt}
