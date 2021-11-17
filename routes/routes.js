@@ -10,11 +10,17 @@ import Home from "../screens/Home";
 
 const MainStack = createNativeStackNavigator();
 
+function Header(){
+    return(
+        <View><Text>AA</Text></View>
+    )
+}
+
 function AppMainStack() {
     return(
         <NavigationContainer>
             <MainStack.Navigator>
-                <MainStack.Screen   name = "SignUp"
+                {/* <MainStack.Screen   name = "SignUp"
                                     component = { SignUp }
                                     options = {
                                         ({ navigation, route }) => ({
@@ -31,14 +37,15 @@ function AppMainStack() {
                                         })
                                     }
 
-                />
+                /> */}
                 <MainStack.Screen   name = "Home"
                                     component = { Home }
                                     options = {
                                         ({ navigation, route }) => ({
-                                            headerShown: false,
+                                            headerShown:false,
                                         })
                                     }
+                                    layout
 
                 />
             </MainStack.Navigator>
