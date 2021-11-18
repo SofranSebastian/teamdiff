@@ -10,7 +10,7 @@ function CardNews(props){
                     }}
         >
             <Card.Title title={ props.title }
-                        titleStyle={{ fontSize:12, fontFamily:'normal-font', fontWeight:'bold', lineHeight:15 }}
+                        titleStyle={{ fontSize:12, fontFamily:'normal-font', fontWeight:'bold', lineHeight:15,  color:"#262731" }}
                         titleNumberOfLines={4}
             />
             <Card.Cover source={{ uri: props.urlToImage }} />
