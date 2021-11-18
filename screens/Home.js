@@ -4,6 +4,8 @@ import { TextInput, Button, HelperText } from 'react-native-paper';
 import { usersCol } from "../db/firebaseDB";
 import { getFirestore, collection, getDocs, addDoc, doc, query, where, updateDoc, arrayUnion } from 'firebase/firestore';
 import CardNews from "../components/CardNews";
+import BottomTabNavigator from "../components/BottomTabNavigator";
+
 const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -59,24 +61,28 @@ export default class Home extends React.Component {
 
     render() {
         return (
-                <SafeAreaView>
-                    <View style={{ marginLeft:5, marginBottom:5, marginTop:'25%'}}>
-                        <Text style={{ fontSize:20, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>TECH NEWS</Text>
+                <SafeAreaView style={{ flex:1, backgroundColor:'white' }}>
+                    <View style={{ flex:0.53 }}>
+                      <Text style={{ marginLeft:5, marginBottom:5, marginTop:'15%',fontSize:20, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>🧑🏻‍💻 WELCOME TO STACKLY </Text>
+                      <View style={{backgroundColor:"#262731", marginLeft:5, marginBottom:5, marginTop:10, alignSelf:'flex-start', borderRadius:20}}>
+                        <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>📰    TECH NEWS</Text>
+                      </View>
+                      <FlatList   scrollEnabled={ true }
+                                  horizontal={ true }
+                                  showsHorizontalScrollIndicator={ false }
+                                  data={ this.data }
+                                  renderItem={ ({item}) => <CardNews  title={ item.title }
+                                                                      urlToImage={ item.urlToImage }
+                                                                      url={ item.url }
+                                                          /> 
+                                          }
+                                  keyExtractor={ item => item.publishedAt}
+                      />
                     </View>
-                    <FlatList   scrollEnabled={ true }
-                                horizontal={ true }
-                                showsHorizontalScrollIndicator={ false }
-                                data={ this.data }
-                                renderItem={ ({item}) => <CardNews  title={ item.title }
-                                                                    urlToImage={ item.urlToImage }
-                                                                    url={ item.url }
-                                                        /> 
-                                        }
-                                keyExtractor={ item => item.publishedAt}
-                    />
-                    <View style={{ marginLeft:5, marginBottom:5, marginTop:'5%'}}>
-                        <Text style={{ fontSize:20, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>BUGS TO BE KILLED</Text>
-                    </View>
+                      <View style={{backgroundColor:"#262731", marginLeft:5, marginBottom:5, marginTop:10, alignSelf:'flex-start', borderRadius:20}}>
+                        <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>☠️   BUGS TO BE KILLED</Text>
+                      </View>
+                    <BottomTabNavigator navigation={this.props.navigation}/>
                 </SafeAreaView> 
         )   
     }
