@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image } from 'react-native';
+import { Text, Image, View, TouchableOpacity } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,36 +10,9 @@ import SignUp from "../screens/SignUp";
 import LogIn from "../screens/LogIn";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
+import AddBug from "../screens/AddBug";
 
 const MainStack = createNativeStackNavigator();
-const Tab = createMaterialBottomTabNavigator()
-
-function MaterialTab() {
-    return(
-        <Tab.Navigator>
-            <Tab.Screen name='Home'  
-                        component={Home} 
-                        options={{ 
-                            tabBarIcon: ({color}) => (
-                                <MaterialCommunityIcons  name={'calendar-arrow-right'} color={color} size={25}/>
-                            ),
-                            tabBarLabel: <Text style={{fontWeight:'bold', fontSize:12}}>Programeaza</Text>
-                            
-                        }}
-            />
-            <Tab.Screen name='Profile'  
-                        component={Profile} 
-                        options={{ 
-                            tabBarIcon: ({color}) => (
-                                <MaterialCommunityIcons  name={'calendar-arrow-right'} color={color} size={25}/>
-                            ),
-                            tabBarLabel: <Text style={{fontWeight:'bold', fontSize:12}}>Programeaza</Text>
-                            
-                        }}
-            />
-        </Tab.Navigator>
-    )
-}
 
 function AppMainStack() {
     return(
@@ -63,16 +36,31 @@ function AppMainStack() {
                                     }
 
                 /> */}
-                <MainStack.Screen   name = "TabNavigator"
-                                    component = { MaterialTab }
+                <MainStack.Screen   name = "Home"
+                                    component = { Home }
                                     options = {
                                         ({ navigation, route }) => ({
                                             headerShown:false,
                                         })
                                     }
-                                    layout
 
                 />
+                <MainStack.Screen   name = "AddBug"
+                                    component = { AddBug }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown:false,
+                                        })
+                                    }
+                />
+                <MainStack.Screen   name = "Profile"
+                                    component = { Profile }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown:false,
+                                        })
+                                    }
+                />                
             </MainStack.Navigator>
         </NavigationContainer>
     )
