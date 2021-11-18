@@ -60,8 +60,8 @@ export default class Home extends React.Component {
     render() {
         return (
                 <SafeAreaView>
-                    <View style={{ marginLeft:5, marginTop:'25%'}}>
-                        <Text style={{ fontSize:20, fontFamily:'normal-font', fontWeight:'bold' }}>TECH NEWS</Text>
+                    <View style={{ marginLeft:5, marginBottom:5, marginTop:'25%'}}>
+                        <Text style={{ fontSize:20, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>TECH NEWS</Text>
                     </View>
                     <FlatList   scrollEnabled={ true }
                                 horizontal={ true }
@@ -74,6 +74,9 @@ export default class Home extends React.Component {
                                         }
                                 keyExtractor={ item => item.publishedAt}
                     />
+                    <View style={{ marginLeft:5, marginBottom:5, marginTop:'5%'}}>
+                        <Text style={{ fontSize:20, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>BUGS TO BE KILLED</Text>
+                    </View>
                 </SafeAreaView> 
         )   
     }
