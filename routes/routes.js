@@ -3,16 +3,41 @@ import { Text, Image } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import SignUp from "../screens/SignUp";
 import LogIn from "../screens/LogIn";
 import Home from "../screens/Home";
+import Profile from "../screens/Profile";
 
 const MainStack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator()
 
-function Header(){
+function MaterialTab() {
     return(
-        <View><Text>AA</Text></View>
+        <Tab.Navigator>
+            <Tab.Screen name='Home'  
+                        component={Home} 
+                        options={{ 
+                            tabBarIcon: ({color}) => (
+                                <MaterialCommunityIcons  name={'calendar-arrow-right'} color={color} size={25}/>
+                            ),
+                            tabBarLabel: <Text style={{fontWeight:'bold', fontSize:12}}>Programeaza</Text>
+                            
+                        }}
+            />
+            <Tab.Screen name='Profile'  
+                        component={Profile} 
+                        options={{ 
+                            tabBarIcon: ({color}) => (
+                                <MaterialCommunityIcons  name={'calendar-arrow-right'} color={color} size={25}/>
+                            ),
+                            tabBarLabel: <Text style={{fontWeight:'bold', fontSize:12}}>Programeaza</Text>
+                            
+                        }}
+            />
+        </Tab.Navigator>
     )
 }
 
@@ -38,8 +63,8 @@ function AppMainStack() {
                                     }
 
                 /> */}
-                <MainStack.Screen   name = "Home"
-                                    component = { Home }
+                <MainStack.Screen   name = "TabNavigator"
+                                    component = { MaterialTab }
                                     options = {
                                         ({ navigation, route }) => ({
                                             headerShown:false,
