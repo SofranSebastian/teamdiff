@@ -12,5 +12,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+export const db = getFirestore(app);
 export const usersCol = collection(db, "users");
+export const bugsCol = collection(db, "bugs");

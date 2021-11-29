@@ -11,6 +11,7 @@ import LogIn from "../screens/LogIn";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
 import AddBug from "../screens/AddBug";
+import BugDetail from "../screens/BugDetail"
 
 const MainStack = createNativeStackNavigator();
 
@@ -60,7 +61,15 @@ function AppMainStack() {
                                             headerShown:false,
                                         })
                                     }
-                />                
+                />
+                <MainStack.Screen   name = "BugDetail"
+                                    component = { BugDetail }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown:false,
+                                        })
+                                    }
+                />                    
             </MainStack.Navigator>
         </NavigationContainer>
     )
