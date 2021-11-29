@@ -5,8 +5,8 @@ import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 function CardNews(props){
     return(
         <Card style={{  marginHorizontal:5, 
-                        width:250,
-                        height:250,
+                        width:175,
+                        height:175,
                         borderRadius:15,
                         shadowColor: "#000",
                         shadowOffset: {
@@ -21,9 +21,9 @@ function CardNews(props){
         >
             <Card.Title title={ props.title }
                         titleStyle={{ fontSize:12, fontFamily:'normal-font', fontWeight:'bold', lineHeight:15,  color:"#262731" }}
-                        titleNumberOfLines={4}
+                        titleNumberOfLines={2}
             />
-            <Card.Cover source={{ uri: props.urlToImage }} style={{ height:150 }} />
+            <Card.Cover source={{ uri: props.urlToImage }} style={{ height:75 }} />
             <Card.Actions style={{ justifyContent:'flex-end' }}>
                 <TouchableOpacity   style={{ flexDirection:'row', alignItems:'center' }}
                                     onPress={ () => {
