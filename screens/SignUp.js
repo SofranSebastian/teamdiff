@@ -153,7 +153,7 @@ export default class SignUp extends React.Component{
 
     render(){
         return(
-            <View style={{ flex:1, backgroundColor: 'red' }}>
+            <View style={{ flex:1 }}>
                 <ImageBackground    source = { background_image_source }
                                     resizeMode = "cover"
                                     style = {{

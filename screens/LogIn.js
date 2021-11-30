@@ -4,6 +4,7 @@ import { TextInput, Button, HelperText } from 'react-native-paper';
 import { usersCol } from "../db/firebaseDB";
 import { query, where, getDocs } from "@firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const background_image_source = require('../images/signup-background.png');
 
@@ -13,6 +14,8 @@ class LogIn extends Component {
 
         this.usernameErrorMessage = "";
         this.passwordErrorMessage = "";
+
+        this.userIDfromFirestore = "";
 
         this.state = {
             errorFromUsernameInput: false,
@@ -41,6 +44,7 @@ class LogIn extends Component {
         if (!querySnapshot.empty) {
             querySnapshot.forEach(user => {
                 this.setState({emailFromDB: user.data().email});
+                this.userIDfromFirestore = user.id
             })
             return true;
         }
@@ -64,6 +68,14 @@ class LogIn extends Component {
                     const user = userCredential.user;
                     console.log(user.uid);
                 })
+                .then( () => {
+                            try {
+                                AsyncStorage.setItem('userID', this.userIDfromFirestore )
+                            } catch (e) {
+                                // saving error
+                            }
+                    }
+                )
                 .then(() => {
                     this.props.navigation.navigate("Home");
                 })
@@ -97,7 +109,7 @@ class LogIn extends Component {
 
     render() {
         return (
-            <View style={ {flex: 1, backgroundColor: "red"} }>
+            <View style={ {flex: 1 } }>
                 <ImageBackground source={ background_image_source } resizeMode="cover" style={ {flex: 1} }>
                     <View style={ {flex: 0.45} }></View>
                     <View style={ {flex: 0.35, justifyContent: 'center', alignItems: 'center'} }>
