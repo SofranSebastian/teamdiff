@@ -123,6 +123,7 @@ export default class Home extends React.Component {
                                                                       description={ item.description }
                                                                       navigation={ this.props.navigation }
                                                                       category={ item.category }
+                                                                      needToSeeIfItIsResolved={ false }
                                                           /> 
                                           }
                                   keyExtractor={ item => item.id}
