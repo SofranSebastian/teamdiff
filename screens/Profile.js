@@ -4,20 +4,37 @@ import { IconButton, Avatar } from 'react-native-paper';
 import { bugsCol } from "../db/firebaseDB";
 import {  where, getDocs, query } from "@firebase/firestore";
 import CardBugs from '../components/CardBugs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class Profile extends React.Component{
     constructor(){
         super()
 
         this.bugsFromFirestore = [];
+        this.userID = "";
 
         this.state = {
             stateBugsArray: [],
         }
     }
 
+    async getIDfromAsyncStorage(){
+        try {
+          const value = await AsyncStorage.getItem('userID')
+          if(value !== null) {
+            this.userID = value;
+          }
+        } catch(e) {
+          // error reading value
+        }
+        
+    }
+
     async getMyBugs(){
-        const q = query(bugsCol, where("ownerID", "==", "ryXRqSYeGbNLSV0X0bWJ"))
+        await this.getIDfromAsyncStorage()
+        const userID = this.userID;
+        console.log(userID)
+        const q = query(bugsCol, where("ownerID", "==", userID))
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
