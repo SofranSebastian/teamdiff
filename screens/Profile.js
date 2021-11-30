@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ImageBackground, FlatList } from 'react-native';
-import { IconButton, Avatar } from 'react-native-paper';
-import { bugsCol } from "../db/firebaseDB";
-import {  where, getDocs, query } from "@firebase/firestore";
+import { IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
+import { usersCol, bugsCol, db } from "../db/firebaseDB";
+import {  where, getDocs, query, doc, getDoc, onSnapshot } from "@firebase/firestore";
 import CardBugs from '../components/CardBugs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,6 +15,10 @@ export default class Profile extends React.Component{
 
         this.state = {
             stateBugsArray: [],
+            bugsKilled: 0,
+            bugsScore: 0,
+            bugsReported: 0,
+            shouldWaitForStats: true
         }
     }
 
@@ -33,7 +37,6 @@ export default class Profile extends React.Component{
     async getMyBugs(){
         await this.getIDfromAsyncStorage()
         const userID = this.userID;
-        console.log(userID)
         const q = query(bugsCol, where("ownerID", "==", userID))
         const querySnapshot = await getDocs(q);
 
@@ -47,9 +50,34 @@ export default class Profile extends React.Component{
         return false;
     }
 
+    async getMyStats(){
+        const bugRef = doc(db, "users", this.userID);
+        const bug = await getDoc(bugRef);
+        
+        if (bug.exists()) {
+            this.setState({ bugsKilled: bug.data().bugsFixed,
+                bugsScore: bug.data().bugsScore,
+                bugsReported: bug.data().bugsAsked
+            })
+            
+        } else {
+          console.log("No such document!");
+        }
+
+        const unsub = onSnapshot(doc(db, "users", this.userID), (bug) => {
+            this.setState({ bugsKilled: bug.data().bugsFixed,
+                bugsScore: bug.data().bugsScore,
+                bugsReported: bug.data().bugsAsked
+            })
+        });
+    }
+
     async componentDidMount(){
+        
         await this.getMyBugs()
         this.setState({ stateBugsArray: this.bugsFromFirestore })
+        await this.getMyStats()
+        this.setState({ shouldWaitForStats: false})
     }
 
     render(){
@@ -86,15 +114,27 @@ export default class Profile extends React.Component{
                                         overflow:'hidden'  }}>
                         <View style={{alignItems:'center'}}>
                             <Text style={{fontSize:16, fontFamily:'normal-font', fontWeight:'bold', color:"white"}}>BUGS KILLED</Text>
-                            <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>378</Text>
+                            { this.state.shouldWaitForStats === true ?
+                                <ActivityIndicator animating={this.state.shouldWaitForStats} color={"white"}/>
+                            :
+                                <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>{this.state.bugsKilled}</Text>
+                            }
                         </View>
                         <View style={{alignItems:'center'}}>
                             <Text style={{fontSize:16, fontFamily:'normal-font', fontWeight:'bold', color:"white"}}>BUGS SCORE</Text>
-                            <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>4234</Text>
+                            { this.state.shouldWaitForStats === true ?
+                                <ActivityIndicator animating={this.state.shouldWaitForStats} color={"white"}/>
+                            :
+                                <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>{this.state.bugsScore}</Text>
+                            }
                         </View>
                         <View style={{alignItems:'center'}}>
                             <Text style={{fontSize:16, fontFamily:'normal-font', fontWeight:'bold', color:"white"}}>BUGS REPORTED</Text>
-                            <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>59</Text>
+                            { this.state.shouldWaitForStats === true ?
+                                <ActivityIndicator animating={this.state.shouldWaitForStats} color={"white"}/>
+                                :
+                                <Text style={{fontSize:16, fontFamily:'normal-font', color:"white"}}>{this.state.bugsReported}</Text>
+                            }
                         </View>
                     </ImageBackground>
                     <View style={{backgroundColor:"#262731", marginLeft:5, marginTop:15, marginBottom:5, alignSelf:'flex-start', borderRadius:20}}>
