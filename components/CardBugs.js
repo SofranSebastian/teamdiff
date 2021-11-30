@@ -27,7 +27,7 @@ function CardBugs(props){
                             shadowOpacity: 0.29,
                             shadowRadius: 4.65,
 
-                            elevation: 7,
+                            elevation: 3,
                         }}
             >
                 {/* <Card.Title title={ props.title.toUpperCase()  +  " 💰" + props.cost + "p" }
