@@ -97,7 +97,7 @@ class LogIn extends Component {
 
     render() {
         return (
-            <View style={ {flex: 1, backgroundColor: "red"} }>
+            <View style={ {flex: 1 } }>
                 <ImageBackground source={ background_image_source } resizeMode="cover" style={ {flex: 1} }>
                     <View style={ {flex: 0.45} }></View>
                     <View style={ {flex: 0.35, justifyContent: 'center', alignItems: 'center'} }>
