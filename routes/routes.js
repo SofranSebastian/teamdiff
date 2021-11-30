@@ -19,7 +19,7 @@ function AppMainStack() {
     return(
         <NavigationContainer>
             <MainStack.Navigator>
-                {/* <MainStack.Screen   name = "SignUp"
+                <MainStack.Screen   name = "SignUp"
                                     component = { SignUp }
                                     options = {
                                         ({ navigation, route }) => ({
@@ -36,7 +36,7 @@ function AppMainStack() {
                                         })
                                     }
 
-                /> */}
+                />
                 <MainStack.Screen   name = "Home"
                                     component = { Home }
                                     options = {
