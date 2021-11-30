@@ -70,19 +70,48 @@ function CardBugs(props){
                                 }}>
                          
                     </View>
-                    <View style={{  flex:0.25,
-                                    alignItems:'flex-end',
-                                }}>
-                          <Button   icon={'chevron-right'}
-                                    onPress={() => props.navigation.navigate("BugDetail",{ screenTitle: props.title })}
-                                    color="#262731"
-                                    labelStyle={{fontSize:8}}
-                                    contentStyle={{width:60, height: 20}}
-                                    mode='contained'
-                                    style={{marginRight:'4%'}}
-                            >
-                            MORE
-                        </Button>
+                    <View style={
+                            props.needToSeeIfItIsResolved === true ? 
+                                {   flex:0.25,
+                                    width:'100%',
+                                    justifyContent:'space-between',
+                                    alignItems:'center',
+                                    flexDirection:'row' 
+                                }
+                            :
+                            {   flex:0.25,
+                                alignItems:'flex-end',
+                            }
+                        }
+                    >
+                            { props.needToSeeIfItIsResolved === true ?
+                                    <View>
+                                        <Text style={
+                                            props.isResolved === true ? 
+                                                { fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"green", marginLeft:'8%' }
+                                            :
+                                                { fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"orange", marginLeft:'8%' }
+                                        }>
+                                            { props.isResolved === true ?
+                                                "RESOLVED"  
+                                                :
+                                                "IN PROGRESS"
+                                            }
+                                        </Text>
+                                    </View>
+                                :
+                                null
+                            }
+                            <Button   icon={'chevron-right'}
+                                        onPress={() => props.navigation.navigate("BugDetail",{ screenTitle: props.title })}
+                                        color="#262731"
+                                        labelStyle={{fontSize:8}}
+                                        contentStyle={{width:60, height: 20}}
+                                        mode='contained'
+                                        style={{marginRight:'2%'}}
+                                >
+                                MORE
+                            </Button>
                     </View>
                 </View>
 
