@@ -86,10 +86,12 @@ export default class Profile extends React.Component{
                     <FlatList   scrollEnabled={ true }
                                 data={ this.state.stateBugsArray }
                                 renderItem={ ({item}) => <CardBugs  title={ item.title }
-                                                                      cost={ item.cost }
-                                                                      description={ item.description }
-                                                                      navigation={ this.props.navigation }
-                                                                      category={ item.category }
+                                                                    cost={ item.cost }
+                                                                    description={ item.description }
+                                                                    navigation={ this.props.navigation }
+                                                                    category={ item.category }
+                                                                    needToSeeIfItIsResolved={ true }
+                                                                    isResolved = { item.isResolved }
                                                           /> 
                                 }
                                 keyExtractor={ item => item.id}
