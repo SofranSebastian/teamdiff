@@ -3,8 +3,7 @@ import { View, Text, Picker } from 'react-native';
 import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { bugsCol } from '../db/firebaseDB';
-import { db } from '../db/firebaseDB';
+import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc } from '@firebase/firestore';
 
 export default class AddBug extends React.Component {
@@ -110,7 +109,7 @@ export default class AddBug extends React.Component {
                             title: this.state.titleFromInput,
                             category: this.state.selectedCategory,
                             description: this.state.descriptionFromInput,
-                            cost: this.state.selectedPoints,
+                            cost: Number(this.state.selectedPoints),
                             helpers: Array(),
                             responsesThread: Array(),
                             createdAt: Date.now(),
@@ -182,9 +181,9 @@ export default class AddBug extends React.Component {
                                 onValueChange={ (category) => this.setState({selectedCategory: category}) }
                             >
                                 <Picker.Item label='-' value='-'/>
-                                <Picker.Item label='Java' value='java'/>
+                                <Picker.Item label='JavaScript' value='JavaScript'/>
                                 <Picker.Item label='C' value='C'/>
-                                <Picker.Item label='Python' value='Python'/>
+                                <Picker.Item label='Java' value='Java'/>
                             </Picker>
                         </View>
                         <HelperText  type="error" visible={ this.state.errorFromCategoryInput } style={{width:'90%'}}>
@@ -197,7 +196,7 @@ export default class AddBug extends React.Component {
                             style={ {backgroundColor: 'white'} }
                             underlineColor='#262731'
                             activeUnderlineColor='#262731'
-                            multiline={true}
+                            multiline={ true }
                             placeholder="Bug Description"
                             onChangeText={ bugD => this.setState({descriptionFromInput: bugD}) }
                         />
@@ -213,9 +212,11 @@ export default class AddBug extends React.Component {
                                 onValueChange={ (points) => this.setState({selectedPoints: points}) }
                             >
                                 <Picker.Item label='-' value=''/>
-                                <Picker.Item label='100' value='100'/>
+                                <Picker.Item label='15' value='15'/>
                                 <Picker.Item label='25' value='25'/>
+                                <Picker.Item label='30' value='30'/>
                                 <Picker.Item label='50' value='50'/>
+                                <Picker.Item label='100' value='100'/>
                             </Picker>
                         </View>
                         <HelperText  type="error" visible={ this.state.errorFromPointsInput } style={{width:'90%'}}>
