@@ -53,10 +53,31 @@ export default class AddBug extends React.Component {
         return true;
     }
 
+    checkDescription = (description) => {
+        if (description.length === 0) {
+            this.descriptionErrorMessage = "The description is empty.";
+            this.setState({errorFromDescriptionInput: true});
+            return false;
+        }
+        else if (description.length > 250) {
+            this.setState({errorFromDescriptionInput: true});
+            this.descriptionErrorMessage = "The description is too long.";
+            console.log("The description is too long.");
+            return false;
+        }
+        else if (description.length <= 250) {
+            this.setState({errorFromDescriptionInput: false});
+            console.log("The description is fine.");
+            return true;
+        }
+    }
+
     postBug = async () => {
         if (this.checkTitle(this.state.titleFromInput)) {
             if (this.checkCategory(this.state.selectedCategory)) {
-                console.log('post bug');
+                if (this.checkDescription(this.state.descriptionFromInput)) {
+                    console.log('post bug');
+                }
             }
         }
     }
