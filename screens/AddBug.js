@@ -99,10 +99,32 @@ export default class AddBug extends React.Component {
             if (this.checkCategory(this.state.selectedCategory)) {
                 if (this.checkDescription(this.state.descriptionFromInput)) {
                     if (this.checkPoints(this.state.selectedPoints)) {
-                        console.log('post bug');
 
                         await this.getIDfromAsyncStorage();
                         console.log(this.userID);
+
+                        let newBug = {
+                            title: this.state.titleFromInput,
+                            category: this.state.selectedCategory,
+                            description: this.state.descriptionFromInput,
+                            cost: this.state.selectedPoints,
+                            helpers: Array(),
+                            responsesThread: Array(),
+                            createdAt: Date.now(),
+                            ownerID: this.userID
+                        };
+
+                        let date = new Date(newBug.createdAt);
+
+                        if (date.getTimezoneOffset() < 0) {
+                            date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
+                        }
+                        else {
+                            date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
+                        }
+                        console.log(date);
+
+                        console.log('post bug');
                     }
                 }
             }
