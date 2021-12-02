@@ -43,9 +43,21 @@ export default class AddBug extends React.Component {
         }
     }
 
+    checkCategory = (category) => {
+        if (category === "-") {
+            this.categoryErrorMessage = "Please select a category.";
+            this.setState({errorFromCategoryInput: true});
+            return false;
+        }
+        this.setState({errorFromCategoryInput: false});
+        return true;
+    }
+
     postBug = async () => {
         if (this.checkTitle(this.state.titleFromInput)) {
-            console.log('post bug');
+            if (this.checkCategory(this.state.selectedCategory)) {
+                console.log('post bug');
+            }
         }
     }
 
