@@ -47,7 +47,7 @@ export default class AddBug extends React.Component {
                             TITLE
                         </Text>
                         <TextInput
-                            style={ {backgroundColor: 'white', marginBottom: 20} }
+                            style={ {backgroundColor: 'white'} }
                             underlineColor='#262731'
                             activeUnderlineColor='#262731'
                             placeholder='Bug Title'
@@ -60,7 +60,7 @@ export default class AddBug extends React.Component {
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             CATEGORY
                         </Text>
-                        <View style={ { borderWidth: 1.7, borderRadius: 3000000, borderColor: "#262731", marginBottom: 20} }>
+                        <View style={ { borderWidth: 1.7, borderRadius: 3000000, borderColor: "#262731"} }>
                             <Picker
                                 selectedValue={ this.state.selectedCategory }
                                 onValueChange={ (category) => this.setState({selectedCategory: category}) }
@@ -78,7 +78,7 @@ export default class AddBug extends React.Component {
                             DESCRIPTION
                         </Text>
                         <TextInput
-                            style={ {backgroundColor: 'white', marginBottom: 20} }
+                            style={ {backgroundColor: 'white'} }
                             underlineColor='#262731'
                             activeUnderlineColor='#262731'
                             multiline={true}
