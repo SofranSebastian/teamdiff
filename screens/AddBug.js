@@ -4,6 +4,7 @@ import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol } from '../db/firebaseDB';
+import { db } from '../db/firebaseDB';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -126,6 +127,13 @@ export default class AddBug extends React.Component {
                         // console.log(date);
                         
                         const bugRef = await addDoc(bugsCol, newBug);
+                        
+                        const userRef = doc(db, "users", this.userID);
+
+                        await updateDoc(userRef, {
+                            bugsAsked: increment(1),
+                            bugs: arrayUnion(bugRef.id)
+                        });
 
                         console.log('post bug');
                     }
