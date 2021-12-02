@@ -23,8 +23,30 @@ export default class AddBug extends React.Component {
         };
     }
 
+    checkTitle = (title) => {
+        if (title.length === 0) {
+            this.titleErrorMessage = "Please input the title.";
+            this.setState({errorFromTitleInput: true});
+            console.log("The title is empty!");
+            return false;
+        }
+        else if (title.length > 25) {
+            this.titleErrorMessage = "The title is too long.";
+            this.setState({errorFromTitleInput: true});
+            console.log("The title is too long.");
+            return false;
+        }
+        else if (title.length <= 25) {
+            this.setState({errorFromTitleInput: false});
+            console.log("The title is fine.");
+            return true;
+        }
+    }
+
     postBug = async () => {
-        console.log('post bug');
+        if (this.checkTitle(this.state.titleFromInput)) {
+            console.log('post bug');
+        }
     }
 
     render() {
