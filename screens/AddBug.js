@@ -3,6 +3,7 @@ import { View, Text, Picker } from 'react-native';
 import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { bugsCol } from '../db/firebaseDB';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -114,15 +115,17 @@ export default class AddBug extends React.Component {
                             ownerID: this.userID
                         };
 
-                        let date = new Date(newBug.createdAt);
+                        // let date = new Date(newBug.createdAt);
 
-                        if (date.getTimezoneOffset() < 0) {
-                            date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                        }
-                        else {
-                            date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                        }
-                        console.log(date);
+                        // if (date.getTimezoneOffset() < 0) {
+                        //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
+                        // }
+                        // else {
+                        //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
+                        // }
+                        // console.log(date);
+                        
+                        const bugRef = await addDoc(bugsCol, newBug);
 
                         console.log('post bug');
                     }
