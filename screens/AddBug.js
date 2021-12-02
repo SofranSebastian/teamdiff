@@ -72,11 +72,23 @@ export default class AddBug extends React.Component {
         }
     }
 
+    checkPoints = (points) => {
+        if (points === "-") {
+            this.pointsErrorMessage = "Please select a number of bug points.";
+            this.setState({errorFromPointsInput: true});
+            return false;
+        }
+        this.setState({errorFromPointsInput: false});
+        return true;
+    }
+
     postBug = async () => {
         if (this.checkTitle(this.state.titleFromInput)) {
             if (this.checkCategory(this.state.selectedCategory)) {
                 if (this.checkDescription(this.state.descriptionFromInput)) {
-                    console.log('post bug');
+                    if (this.checkPoints(this.state.selectedPoints)) {
+                        console.log('post bug');
+                    }
                 }
             }
         }
