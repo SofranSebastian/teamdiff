@@ -1,17 +1,101 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Picker } from 'react-native';
+import { IconButton, TextInput, Button } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-export default class AddBug extends React.Component{
-    constructor(){
-        super()
+export default class AddBug extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            selectedCategory: "-",
+            selectedPoints: "-",
+            descriptionFromInput: "",
+            titleFromInput: "",
+        };
     }
 
-    render(){
+    postBug = async () => {
+        console.log('post bug');
+    }
+
+    render() {
         return(
-            <View style={{flex:1, backgroundColor:'red'}}>
-                <Text>b</Text>
+            <View style={ {flex: 1, backgroundColor: 'white'} }>
+                <IconButton
+                    icon='arrow-left-thick'
+                    style={ {flex: 0.1, position: 'absolute', marginTop: 40, zIndex: 1} }
+                    size={35} 
+                    onPress={ () => this.props.navigation.navigate("Home") }
+                />
+
+                <Text style={ {flex: 0.1, fontWeight: 'bold', textAlign: 'center', fontSize: 20, marginTop: 50, color: "#262731", marginBottom: 10} }>
+                    ADD BUG
+                </Text>
+
+                <KeyboardAwareScrollView style={ {flex: 0.7} }>
+                    <View style={ {marginLeft: 20, marginRight: 20} }>
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 5, marginTop: 10} }>
+                            TITLE
+                        </Text>
+                        <TextInput
+                            style={ {backgroundColor: 'white', marginBottom: 20} }
+                            underlineColor='#262731'
+                            activeUnderlineColor='#262731'
+                            placeholder='Bug Title'
+                            left={ <TextInput.Icon icon="text-short" size={20}/> }
+                            onChangeText={ title => this.setState({titleFromInput: title}) } 
+                        />
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
+                            CATEGORY
+                        </Text>
+                        <View style={ { borderWidth: 1.7, borderRadius: 3000000, borderColor: "#262731", marginBottom: 20} }>
+                            <Picker
+                                selectedValue={ this.state.selectedCategory }
+                                onValueChange={ (category) => this.setState({selectedCategory: category}) }
+                            >
+                                <Picker.Item label='-' value='-'/>
+                                <Picker.Item label='Java' value='java'/>
+                                <Picker.Item label='C' value='C'/>
+                                <Picker.Item label='Python' value='Python'/>
+                            </Picker>
+                        </View>
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
+                            DESCRIPTION
+                        </Text>
+                        <TextInput
+                            style={ {backgroundColor: 'white', marginBottom: 20} }
+                            underlineColor='#262731'
+                            activeUnderlineColor='#262731'
+                            multiline={true}
+                            placeholder="Bug Description"
+                            onChangeText={ bugD => this.setState({descriptionFromInput: bugD}) }
+                        />
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
+                            BUG POINTS
+                        </Text>
+                        <View style={ { borderWidth: 1.7, borderRadius: 30, borderColor: "#262731"} }>
+                            <Picker
+                                selectedValue={ this.state.selectedPoints }
+                                onValueChange={ (points) => this.setState({selectedPoints: points}) }
+                            >
+                                <Picker.Item label='-' value=''/>
+                                <Picker.Item label='100' value='100'/>
+                                <Picker.Item label='25' value='25'/>
+                                <Picker.Item label='50' value='50'/>
+                            </Picker>
+                        </View>
+                    </View>
+                </KeyboardAwareScrollView>
+                <Button 
+                    style={ {backgroundColor: "#262731", marginTop: "5%", marginBottom:"5%", width:"40%", height: 40, alignSelf: 'center'} }
+                    theme={ {roundness: 20} }
+                    mode="contained"
+                    onPress = { async () => this.postBug() }
+                >
+                    POST BUG
+                </Button>
             </View>
         )
     }
-
 }
