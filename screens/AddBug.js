@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Picker } from 'react-native';
 import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -21,6 +22,17 @@ export default class AddBug extends React.Component {
             errorFromDescriptionInput: false,
             errorFromPointsInput: false
         };
+    }
+
+    async getIDfromAsyncStorage() {
+        try {
+          const value = await AsyncStorage.getItem('userID')
+          if (value !== null) {
+            this.userID = value;
+          }
+        } catch (e) {
+          // error reading value
+        }
     }
 
     checkTitle = (title) => {
@@ -88,6 +100,9 @@ export default class AddBug extends React.Component {
                 if (this.checkDescription(this.state.descriptionFromInput)) {
                     if (this.checkPoints(this.state.selectedPoints)) {
                         console.log('post bug');
+
+                        await this.getIDfromAsyncStorage();
+                        console.log(this.userID);
                     }
                 }
             }
