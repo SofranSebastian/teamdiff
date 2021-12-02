@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol } from '../db/firebaseDB';
 import { db } from '../db/firebaseDB';
+import { addDoc, arrayUnion, doc, increment, updateDoc } from '@firebase/firestore';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -135,7 +136,7 @@ export default class AddBug extends React.Component {
                             bugs: arrayUnion(bugRef.id)
                         });
 
-                        console.log('post bug');
+                        this.props.navigation.navigate('Home');
                     }
                 }
             }
