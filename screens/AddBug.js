@@ -1,17 +1,25 @@
 import React from 'react';
 import { View, Text, Picker } from 'react-native';
-import { IconButton, TextInput, Button } from 'react-native-paper';
+import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class AddBug extends React.Component {
     constructor() {
         super();
+        this.titleErrorMessage = "";
+        this.categoryErrorMessage = "";
+        this.descriptionErrorMessage = "";
+        this.pointsErrormessage = "";
 
         this.state = {
             selectedCategory: "-",
             selectedPoints: "-",
             descriptionFromInput: "",
             titleFromInput: "",
+            errorFromTitleInput: false,
+            errorFromCategoryInput: false,
+            errorFromDescriptionInput: false,
+            errorFromPointsInput: false
         };
     }
 
@@ -46,6 +54,9 @@ export default class AddBug extends React.Component {
                             left={ <TextInput.Icon icon="text-short" size={20}/> }
                             onChangeText={ title => this.setState({titleFromInput: title}) } 
                         />
+                        <HelperText  type="error" visible={ this.state.errorFromTitleInput } style={{width:'90%'}}>
+                            { this.titleErrorMessage }
+                        </HelperText>
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             CATEGORY
                         </Text>
@@ -60,6 +71,9 @@ export default class AddBug extends React.Component {
                                 <Picker.Item label='Python' value='Python'/>
                             </Picker>
                         </View>
+                        <HelperText  type="error" visible={ this.state.errorFromCategoryInput } style={{width:'90%'}}>
+                            { this.categoryErrorMessage }
+                        </HelperText>
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             DESCRIPTION
                         </Text>
@@ -71,6 +85,9 @@ export default class AddBug extends React.Component {
                             placeholder="Bug Description"
                             onChangeText={ bugD => this.setState({descriptionFromInput: bugD}) }
                         />
+                        <HelperText  type="error" visible={ this.state.errorFromDescriptionInput } style={{width:'90%'}}>
+                            { this.descriptionErrorMessage }
+                        </HelperText>
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             BUG POINTS
                         </Text>
@@ -85,6 +102,9 @@ export default class AddBug extends React.Component {
                                 <Picker.Item label='50' value='50'/>
                             </Picker>
                         </View>
+                        <HelperText  type="error" visible={ this.state.errorFromPointsInput } style={{width:'90%'}}>
+                            { this.pointsErrorMessage }
+                        </HelperText>
                     </View>
                 </KeyboardAwareScrollView>
                 <Button 
