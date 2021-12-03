@@ -4,7 +4,7 @@ import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
-import { addDoc, arrayUnion, doc, increment, updateDoc } from '@firebase/firestore';
+import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -126,16 +126,33 @@ export default class AddBug extends React.Component {
                         // }
                         // console.log(date);
                         
-                        const bugRef = await addDoc(bugsCol, newBug);
+
                         
                         const userRef = doc(db, "users", this.userID);
+                        const userSnap = await getDoc(userRef);
+ 
+                        let userPoints = userSnap.data().bugsScore;
+ 
+                        if (userPoints >= this.state.selectedPoints) {
+                            
+                            const bugRef = await addDoc(bugsCol, newBug);
+                            
+                            await updateDoc(userRef, {
+                                bugsScore: increment(-Number(this.state.selectedPoints)),
+                                bugsAsked: increment(1),
+                                bugs: arrayUnion(bugRef.id)
+                            });
+    
 
-                        await updateDoc(userRef, {
-                            bugsAsked: increment(1),
-                            bugs: arrayUnion(bugRef.id)
-                        });
-
-                        this.props.navigation.navigate('Home');
+                            this.props.navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Home' }]
+                           });
+                        }
+                        else {
+                            this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                            this.setState({errorFromPointsInput: true});
+                        }
                     }
                 }
             }
@@ -146,7 +163,7 @@ export default class AddBug extends React.Component {
         return(
             <View style={ {flex: 1, backgroundColor: 'white'} }>
                 <IconButton
-                    icon='arrow-left-thick'
+                    icon='chevron-left'
                     style={ {flex: 0.1, position: 'absolute', marginTop: 40, zIndex: 1} }
                     size={35} 
                     onPress={ () => this.props.navigation.navigate("Home") }
@@ -211,7 +228,7 @@ export default class AddBug extends React.Component {
                                 selectedValue={ this.state.selectedPoints }
                                 onValueChange={ (points) => this.setState({selectedPoints: points}) }
                             >
-                                <Picker.Item label='-' value=''/>
+                                <Picker.Item label='-' value='-'/>
                                 <Picker.Item label='15' value='15'/>
                                 <Picker.Item label='25' value='25'/>
                                 <Picker.Item label='30' value='30'/>
