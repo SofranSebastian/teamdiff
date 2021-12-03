@@ -103,7 +103,14 @@ function CardBugs(props){
                                 null
                             }
                             <Button   icon={'chevron-right'}
-                                        onPress={() => props.navigation.navigate("BugDetail",{ screenTitle: props.title })}
+                                        onPress={() => props.navigation.navigate("BugDetail",{  screenTitle: props.title,
+                                                                                                bugDetail: props.description,
+                                                                                                bugPoints: props.cost,
+                                                                                                isMyBug: props.isMyBug,
+                                                                                                id: props.id
+                                                                                            }
+                                                                                )
+                                                }
                                         color="#262731"
                                         labelStyle={{fontSize:8}}
                                         contentStyle={{width:60, height: 20}}
