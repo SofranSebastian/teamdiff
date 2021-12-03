@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ImageBackground, FlatList } from 'react-native';
 import { IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
 import { usersCol, bugsCol, db } from "../db/firebaseDB";
-import {  where, getDocs, query, doc, getDoc, onSnapshot } from "@firebase/firestore";
+import {  where, getDocs, query, doc, getDoc, onSnapshot, orderBy } from "@firebase/firestore";
 import CardBugs from '../components/CardBugs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -37,7 +37,7 @@ export default class Profile extends React.Component{
     async getMyBugs(){
         await this.getIDfromAsyncStorage()
         const userID = this.userID;
-        const q = query(bugsCol, where("ownerID", "==", userID))
+        const q = query(bugsCol, where("ownerID", "==", userID), orderBy("createdAt","desc"))
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -149,9 +149,10 @@ export default class Profile extends React.Component{
                                                                     category={ item.category }
                                                                     needToSeeIfItIsResolved={ true }
                                                                     isResolved = { item.isResolved }
+                                                                    id = { item.id }
                                                           /> 
                                 }
-                                keyExtractor={ item => item.id}
+                                keyExtractor={ item => item.title}
                     />
                 </View>
             </View>
