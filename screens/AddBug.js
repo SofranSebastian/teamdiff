@@ -244,3 +244,20 @@ export default class AddBug extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    chipStyle: {
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "#262731",
+        marginHorizontal: "1%",
+        marginVertical: "1%"
+    },
+    chipStylePressed: {
+        backgroundColor: "#262731",
+        borderWidth: 1,
+        borderColor: "#262731",
+        marginHorizontal: "1%",
+        marginVertical: "1%"
+    }
+});
