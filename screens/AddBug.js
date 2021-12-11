@@ -132,6 +132,27 @@ export default class AddBug extends React.Component {
                         // console.log(date);
                         
                         console.log(newBug);
+
+                        const userRef = doc(db, "users", this.userID);
+                        const userSnap = await getDoc(userRef);
+                        let userPoints = userSnap.data().bugsScore;
+                        
+                        console.log(userPoints);
+                        if (userPoints >= this.state.selectedPoints) {
+                            const bugRef = await addDoc(bugsCol, newBug);
+
+                            await updateDoc(userRef, {
+                                bugsScore: increment(-Number(this.state.selectedPoints)),
+                                bugsAsked: increment(1),
+                                bugs: arrayUnion(bugRef.id)
+                            });
+    
+                            this.props.navigation.navigate('Home');
+                        }
+                        else {
+                            this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                            this.setState({errorFromPointsInput: true});
+                        }
                     }
                 }
             }
