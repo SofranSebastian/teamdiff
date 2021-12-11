@@ -16,6 +16,10 @@ export default class AddBug extends React.Component {
         this.pointsErrorMessage = "";
 
         this.state = {
+            selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "#262731"],
+            isSelectedCategory: [false, false, false, false, false, false],
+            selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "#262731"],
+            isSelectedPoints: [false, false, false, false, false, false],
             selectedCategory: null,
             selectedPoints: null,
             descriptionFromInput: "",
@@ -168,22 +172,28 @@ export default class AddBug extends React.Component {
                             CATEGORY
                         </Text>
                         <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[0] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 JavaScript
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[1] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 Java
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[2] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 C
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[3] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 Python
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[4] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 Scala
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[5] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 C++
                             </Chip>
                         </View>
@@ -208,22 +218,28 @@ export default class AddBug extends React.Component {
                             BUG POINTS
                         </Text>
                         <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[0] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 5
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[1] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 20
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[2] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 40
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[3] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 60
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[4] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 80
                             </Chip>
-                            <Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[5] === false ? styles.chipStyle : styles.chipStylePressed }>
                                 100
                             </Chip>    
                         </View>
