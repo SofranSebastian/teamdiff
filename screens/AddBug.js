@@ -173,27 +173,82 @@ export default class AddBug extends React.Component {
                         </Text>
                         <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
                             <Chip
-                                style={ this.state.isSelectedCategory[0] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[0] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [true, false, false, false, false, false],
+                                        selectedCategory: "JavaScript",
+                                        selectedCategoryColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("JavaScript")
+                                )
+                                }
+                                selectedColor={this.state.selectedCategoryColor[0]}>
                                 JavaScript
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedCategory[1] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[1] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, true, false, false, false, false], 
+                                        selectedCategory: "Java", 
+                                        selectedCategoryColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("Java")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[1]}>
                                 Java
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedCategory[2] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[2] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, true, false, false, false], 
+                                        selectedCategory: "C", 
+                                        selectedCategoryColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("C")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[2]}>
                                 C
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedCategory[3] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[3] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, true, false, false], 
+                                        selectedCategory: "Python", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
+                                    },
+                                    console.log("Python")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[3]}>
                                 Python
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedCategory[4] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[4] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, false, true, false], 
+                                        selectedCategory: "Scala", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
+                                    },
+                                    console.log("Scala")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[4]}>
                                 Scala
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedCategory[5] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedCategory[5] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, false, false, true], 
+                                        selectedCategory: "C++", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
+                                    },
+                                    console.log("C++")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[5]}>
                                 C++
                             </Chip>
                         </View>
@@ -219,27 +274,82 @@ export default class AddBug extends React.Component {
                         </Text>
                         <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
                             <Chip
-                                style={ this.state.isSelectedPoints[0] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[0] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [true, false, false, false, false, false],
+                                        selectedPoints: "5",
+                                        selectedPointsColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("5")
+                                )
+                                }
+                                selectedColor={this.state.selectedPointsColor[0]}>
                                 5
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedPoints[1] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[1] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, true, false, false, false, false], 
+                                        selectedPoints: "20", 
+                                        selectedPointsColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("20")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[1]}>
                                 20
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedPoints[2] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[2] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, true, false, false, false], 
+                                        selectedPoints: "40", 
+                                        selectedPointsColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("40")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[2]}>
                                 40
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedPoints[3] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[3] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, true, false, false], 
+                                        selectedPoints: "60", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
+                                    },
+                                    console.log("60")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[3]}>
                                 60
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedPoints[4] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[4] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, false, true, false], 
+                                        selectedPoints: "80", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
+                                    },
+                                    console.log("80")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[4]}>
                                 80
                             </Chip>
                             <Chip
-                                style={ this.state.isSelectedPoints[5] === false ? styles.chipStyle : styles.chipStylePressed }>
+                                style={ this.state.isSelectedPoints[5] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, false, false, true], 
+                                        selectedPoints: "100", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
+                                    },
+                                    console.log("100")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[5]}>
                                 100
                             </Chip>    
                         </View>
