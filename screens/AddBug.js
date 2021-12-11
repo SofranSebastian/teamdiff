@@ -1,22 +1,27 @@
 import React from 'react';
-import { View, Text, Picker } from 'react-native';
-import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { IconButton, TextInput, Button, HelperText, Chip } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
-import { addDoc, arrayUnion, doc, increment, updateDoc } from '@firebase/firestore';
+import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 
 export default class AddBug extends React.Component {
     constructor() {
         super();
+
         this.titleErrorMessage = "";
         this.categoryErrorMessage = "";
         this.descriptionErrorMessage = "";
-        this.pointsErrormessage = "";
+        this.pointsErrorMessage = "";
 
         this.state = {
-            selectedCategory: "-",
-            selectedPoints: "-",
+            selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "#262731"],
+            isSelectedCategory: [false, false, false, false, false, false],
+            selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "#262731"],
+            isSelectedPoints: [false, false, false, false, false, false],
+            selectedCategory: null,
+            selectedPoints: null,
             descriptionFromInput: "",
             titleFromInput: "",
             errorFromTitleInput: false,
@@ -45,7 +50,7 @@ export default class AddBug extends React.Component {
             return false;
         }
         else if (title.length > 25) {
-            this.titleErrorMessage = "The title is too long.";
+            this.titleErrorMessage = "The title is too long (max. 25 characters).";
             this.setState({errorFromTitleInput: true});
             console.log("The title is too long.");
             return false;
@@ -58,7 +63,7 @@ export default class AddBug extends React.Component {
     }
 
     checkCategory = (category) => {
-        if (category === "-") {
+        if (category === null) {
             this.categoryErrorMessage = "Please select a category.";
             this.setState({errorFromCategoryInput: true});
             return false;
@@ -75,7 +80,7 @@ export default class AddBug extends React.Component {
         }
         else if (description.length > 250) {
             this.setState({errorFromDescriptionInput: true});
-            this.descriptionErrorMessage = "The description is too long.";
+            this.descriptionErrorMessage = "The description is too long (max. 250 characters).";
             console.log("The description is too long.");
             return false;
         }
@@ -87,7 +92,7 @@ export default class AddBug extends React.Component {
     }
 
     checkPoints = (points) => {
-        if (points === "-") {
+        if (points === null) {
             this.pointsErrorMessage = "Please select a number of bug points.";
             this.setState({errorFromPointsInput: true});
             return false;
@@ -126,16 +131,28 @@ export default class AddBug extends React.Component {
                         // }
                         // console.log(date);
                         
-                        const bugRef = await addDoc(bugsCol, newBug);
-                        
+                        console.log(newBug);
+
                         const userRef = doc(db, "users", this.userID);
+                        const userSnap = await getDoc(userRef);
+                        let userPoints = userSnap.data().bugsScore;
+                        
+                        console.log(userPoints);
+                        if (userPoints >= this.state.selectedPoints) {
+                            const bugRef = await addDoc(bugsCol, newBug);
 
-                        await updateDoc(userRef, {
-                            bugsAsked: increment(1),
-                            bugs: arrayUnion(bugRef.id)
-                        });
-
-                        this.props.navigation.navigate('Home');
+                            await updateDoc(userRef, {
+                                bugsScore: increment(-Number(this.state.selectedPoints)),
+                                bugsAsked: increment(1),
+                                bugs: arrayUnion(bugRef.id)
+                            });
+    
+                            this.props.navigation.navigate('Home');
+                        }
+                        else {
+                            this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                            this.setState({errorFromPointsInput: true});
+                        }
                     }
                 }
             }
@@ -144,14 +161,14 @@ export default class AddBug extends React.Component {
 
     render() {
         return(
-            <View style={ {flex: 1, backgroundColor: 'white'} }>
+            <View style={ {flex: 1, backgroundColor: 'white'} }> 
                 <IconButton
                     icon='arrow-left-thick'
                     style={ {flex: 0.1, position: 'absolute', marginTop: 40, zIndex: 1} }
-                    size={35} 
+                    size={ 35 }
                     onPress={ () => this.props.navigation.navigate("Home") }
                 />
-
+                
                 <Text style={ {flex: 0.1, fontWeight: 'bold', textAlign: 'center', fontSize: 20, marginTop: 50, color: "#262731", marginBottom: 10} }>
                     ADD BUG
                 </Text>
@@ -175,16 +192,86 @@ export default class AddBug extends React.Component {
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             CATEGORY
                         </Text>
-                        <View style={ { borderWidth: 1.7, borderRadius: 3000000, borderColor: "#262731"} }>
-                            <Picker
-                                selectedValue={ this.state.selectedCategory }
-                                onValueChange={ (category) => this.setState({selectedCategory: category}) }
-                            >
-                                <Picker.Item label='-' value='-'/>
-                                <Picker.Item label='JavaScript' value='JavaScript'/>
-                                <Picker.Item label='C' value='C'/>
-                                <Picker.Item label='Java' value='Java'/>
-                            </Picker>
+                        <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
+                            <Chip
+                                style={ this.state.isSelectedCategory[0] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [true, false, false, false, false, false],
+                                        selectedCategory: "JavaScript",
+                                        selectedCategoryColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("JavaScript")
+                                )
+                                }
+                                selectedColor={this.state.selectedCategoryColor[0]}>
+                                JavaScript
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[1] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, true, false, false, false, false], 
+                                        selectedCategory: "Java", 
+                                        selectedCategoryColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("Java")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[1]}>
+                                Java
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[2] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, true, false, false, false], 
+                                        selectedCategory: "C", 
+                                        selectedCategoryColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("C")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[2]}>
+                                C
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[3] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, true, false, false], 
+                                        selectedCategory: "Python", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
+                                    },
+                                    console.log("Python")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[3]}>
+                                Python
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[4] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, false, true, false], 
+                                        selectedCategory: "Scala", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
+                                    },
+                                    console.log("Scala")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[4]}>
+                                Scala
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedCategory[5] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedCategory: [false, false, false, false, false, true], 
+                                        selectedCategory: "C++", 
+                                        selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
+                                    },
+                                    console.log("C++")
+                                )}
+                                selectedColor={this.state.selectedCategoryColor[5]}>
+                                C++
+                            </Chip>
                         </View>
                         <HelperText  type="error" visible={ this.state.errorFromCategoryInput } style={{width:'90%'}}>
                             { this.categoryErrorMessage }
@@ -206,33 +293,118 @@ export default class AddBug extends React.Component {
                         <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                             BUG POINTS
                         </Text>
-                        <View style={ { borderWidth: 1.7, borderRadius: 30, borderColor: "#262731"} }>
-                            <Picker
-                                selectedValue={ this.state.selectedPoints }
-                                onValueChange={ (points) => this.setState({selectedPoints: points}) }
-                            >
-                                <Picker.Item label='-' value=''/>
-                                <Picker.Item label='15' value='15'/>
-                                <Picker.Item label='25' value='25'/>
-                                <Picker.Item label='30' value='30'/>
-                                <Picker.Item label='50' value='50'/>
-                                <Picker.Item label='100' value='100'/>
-                            </Picker>
+                        <View style={{flexDirection: 'row', flexWrap:'wrap'}}>
+                            <Chip
+                                style={ this.state.isSelectedPoints[0] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [true, false, false, false, false, false],
+                                        selectedPoints: "5",
+                                        selectedPointsColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("5")
+                                )
+                                }
+                                selectedColor={this.state.selectedPointsColor[0]}>
+                                5
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[1] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, true, false, false, false, false], 
+                                        selectedPoints: "20", 
+                                        selectedPointsColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("20")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[1]}>
+                                20
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[2] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, true, false, false, false], 
+                                        selectedPoints: "40", 
+                                        selectedPointsColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
+                                    },
+                                    console.log("40")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[2]}>
+                                40
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[3] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, true, false, false], 
+                                        selectedPoints: "60", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
+                                    },
+                                    console.log("60")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[3]}>
+                                60
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[4] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, false, true, false], 
+                                        selectedPoints: "80", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
+                                    },
+                                    console.log("80")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[4]}>
+                                80
+                            </Chip>
+                            <Chip
+                                style={ this.state.isSelectedPoints[5] === false ? styles.chipStyle : styles.chipStylePressed }
+                                onPress={() => this.setState(
+                                    {
+                                        isSelectedPoints: [false, false, false, false, false, true], 
+                                        selectedPoints: "100", 
+                                        selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
+                                    },
+                                    console.log("100")
+                                )}
+                                selectedColor={this.state.selectedPointsColor[5]}>
+                                100
+                            </Chip>    
                         </View>
                         <HelperText  type="error" visible={ this.state.errorFromPointsInput } style={{width:'90%'}}>
                             { this.pointsErrorMessage }
                         </HelperText>
                     </View>
                 </KeyboardAwareScrollView>
-                <Button 
+                    <Button 
                     style={ {backgroundColor: "#262731", marginTop: "5%", marginBottom:"5%", width:"40%", height: 40, alignSelf: 'center'} }
                     theme={ {roundness: 20} }
                     mode="contained"
-                    onPress = { async () => this.postBug() }
-                >
-                    POST BUG
-                </Button>
-            </View>
+                    onPress = { this.postBug }
+                    >
+                        POST BUG
+                    </Button>
+            </View>   
         )
     }
 }
+
+const styles = StyleSheet.create({
+    chipStyle: {
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "#262731",
+        marginHorizontal: "1%",
+        marginVertical: "1%"
+    },
+    chipStylePressed: {
+        backgroundColor: "#262731",
+        borderWidth: 1,
+        borderColor: "#262731",
+        marginHorizontal: "1%",
+        marginVertical: "1%"
+    }
+});
