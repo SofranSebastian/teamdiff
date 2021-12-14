@@ -131,23 +131,28 @@ export default class AddBug extends React.Component {
                         // }
                         // console.log(date);
                         
-                        console.log(newBug);
 
+                        
                         const userRef = doc(db, "users", this.userID);
                         const userSnap = await getDoc(userRef);
+ 
                         let userPoints = userSnap.data().bugsScore;
-                        
-                        console.log(userPoints);
+ 
                         if (userPoints >= this.state.selectedPoints) {
+                            
                             const bugRef = await addDoc(bugsCol, newBug);
-
+                            
                             await updateDoc(userRef, {
                                 bugsScore: increment(-Number(this.state.selectedPoints)),
                                 bugsAsked: increment(1),
                                 bugs: arrayUnion(bugRef.id)
                             });
     
-                            this.props.navigation.navigate('Home');
+
+                            this.props.navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Home' }]
+                           });
                         }
                         else {
                             this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
@@ -163,7 +168,7 @@ export default class AddBug extends React.Component {
         return(
             <View style={ {flex: 1, backgroundColor: 'white'} }> 
                 <IconButton
-                    icon='arrow-left-thick'
+                    icon='chevron-left'
                     style={ {flex: 0.1, position: 'absolute', marginTop: 40, zIndex: 1} }
                     size={ 35 }
                     onPress={ () => this.props.navigation.navigate("Home") }

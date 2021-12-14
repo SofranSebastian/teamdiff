@@ -2,11 +2,12 @@ import React from "react";
 import { Text, View, ImageBackground, SafeAreaView, FlatList, ScrollView, StatusBar} from 'react-native';
 import { TextInput, Button, HelperText, IconButton } from 'react-native-paper';
 import { bugsCol } from "../db/firebaseDB";
-import { doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
+import { doc, getDocs, onSnapshot, query, where, orderBy } from "firebase/firestore";
 import CardNews from "../components/CardNews";
 import CardBugs from "../components/CardBugs";
 import BottomTabNavigator from "../components/BottomTabNavigator";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DATA = [
     {
@@ -29,19 +30,36 @@ export default class Home extends React.Component {
     
         this.bugsFromFirestore = [];
         this.data = dummyData.news;
+        this.userID = "";
         //console.log(this.data);
 
         this.state = {
           stateBugsArray: [],
+          refresh: false,
         }
     }
 
+    async getIDfromAsyncStorage(){
+      try {
+        const value = await AsyncStorage.getItem('userID')
+        if(value !== null) {
+          this.userID = value;
+        }
+      } catch(e) {
+        // error reading value
+      }
+      
+    }
+
     async getBugs(){
-      const querySnapshot = await getDocs(bugsCol);
+      await this.getIDfromAsyncStorage();
+      const q = query( bugsCol, orderBy("createdAt","desc"))
+      const querySnapshot = await getDocs(q);
+      this.bugsFromFirestore = [];
       querySnapshot.forEach((bug) => {
-        var bugFromFirestore = bug.data()
-        bugFromFirestore.id = bug.id
-        this.bugsFromFirestore.push(bugFromFirestore)
+        var bugFromFirestore = bug.data();
+        bugFromFirestore.id = bug.id;
+        this.bugsFromFirestore.push(bugFromFirestore);
       });
 
       // const q = query(bugsCol, where("isResolved", "==", false));
@@ -92,6 +110,23 @@ export default class Home extends React.Component {
         this.setState({ stateBugsArray: this.bugsFromFirestore })
     }
 
+    checkIfItIsMyBug( ownerID ){
+
+      if( this.userID === ownerID ){
+        return true;
+      }
+
+      return false;
+
+    }
+
+    async _onRefresh(){
+      this.setState({refresh: true});
+      await this.getBugs();
+      this.setState({ stateBugsArray: this.bugsFromFirestore });
+      this.setState({refresh:false});
+    }
+
 
     render() {
         return (
@@ -127,6 +162,7 @@ export default class Home extends React.Component {
                     </View>
                     <View style={{flex:0.45}}>
                       <FlatList   scrollEnabled={ true }
+
                                   data={ this.state.stateBugsArray }
                                   renderItem={ ({item}) => <CardBugs  title={ item.title }
                                                                       cost={ item.cost }
@@ -134,8 +170,12 @@ export default class Home extends React.Component {
                                                                       navigation={ this.props.navigation }
                                                                       category={ item.category }
                                                                       needToSeeIfItIsResolved={ false }
+                                                                      isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
+                                                                      id = { item.id }
                                                           /> 
                                           }
+                                  refreshing={this.state.refresh}
+                                  onRefresh={()=> this._onRefresh()}
                                   keyExtractor={ item => item.id}
                         />
                       </View>
@@ -144,4 +184,3 @@ export default class Home extends React.Component {
         )   
     }
 }
-
