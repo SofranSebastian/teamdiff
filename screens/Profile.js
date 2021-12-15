@@ -150,6 +150,7 @@ export default class Profile extends React.Component{
                                                                     needToSeeIfItIsResolved={ true }
                                                                     isResolved = { item.isResolved }
                                                                     id = { item.id }
+                                                                    creator = { item.ownerUsername }
                                                           /> 
                                 }
                                 keyExtractor={ item => item.title}
