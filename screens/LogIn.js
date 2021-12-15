@@ -70,7 +70,8 @@ class LogIn extends Component {
                 })
                 .then( () => {
                             try {
-                                AsyncStorage.setItem('userID', this.userIDfromFirestore )
+                                AsyncStorage.setItem('userID', this.userIDfromFirestore );
+                                AsyncStorage.setItem('userName', this.state.usernameFromInput);
                             } catch (e) {
                                 // saving error
                             }
