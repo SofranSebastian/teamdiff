@@ -14,6 +14,8 @@ export default class AddBug extends React.Component {
         this.categoryErrorMessage = "";
         this.descriptionErrorMessage = "";
         this.pointsErrorMessage = "";
+        this.userID = "";
+        this.username = "";
 
         this.state = {
             selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "#262731"],
@@ -33,10 +35,17 @@ export default class AddBug extends React.Component {
 
     async getIDfromAsyncStorage() {
         try {
-          const value = await AsyncStorage.getItem('userID')
-          if (value !== null) {
-            this.userID = value;
+          const id = await AsyncStorage.getItem('userID');
+          const username = await AsyncStorage.getItem('userName');
+
+          if (id !== null) {
+            this.userID = id;
           }
+
+          if (username !== null) {
+            this.userName = username;
+          }
+
         } catch (e) {
           // error reading value
         }
@@ -101,6 +110,10 @@ export default class AddBug extends React.Component {
         return true;
     }
 
+    componentDidMount(){
+
+    }
+
     postBug = async () => {
         if (this.checkTitle(this.state.titleFromInput)) {
             if (this.checkCategory(this.state.selectedCategory)) {
@@ -118,7 +131,9 @@ export default class AddBug extends React.Component {
                             helpers: Array(),
                             responsesThread: Array(),
                             createdAt: Date.now(),
-                            ownerID: this.userID
+                            ownerID: this.userID,
+                            ownerUsername: this.userName,
+                            isResolved: false
                         };
 
                         // let date = new Date(newBug.createdAt);
