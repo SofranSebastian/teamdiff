@@ -5,7 +5,7 @@ import { db, bugsCol } from "../db/firebaseDB";
 import { doc, getDocs, onSnapshot, query, where, getDoc } from "firebase/firestore";
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import Swiper from 'react-native-swiper';
-import CardBugs from "../components/CardBugs";
+import CardSolution from "../components/CardSolution";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default class BugDetail extends React.Component {
 
@@ -17,7 +17,9 @@ export default class BugDetail extends React.Component {
             responsesFromFirestore: [],
             creator: "",
             loggedUser: "",
-            timestamp: new Date()
+            timestamp: new Date(),
+            bugID: "",
+            isAbleToDecide: false
         }  
 
     }
@@ -29,7 +31,7 @@ export default class BugDetail extends React.Component {
           if (username !== null) {
             this.setState({loggedUser: username});
         
-            if( this.props.route.params.creatorName !== undefined ){
+            if( this.props.route.params.creatorName ){
                 this.setState({creator: this.props.route.params.creatorName})
             }
           }
@@ -40,6 +42,7 @@ export default class BugDetail extends React.Component {
     }
 
     async getResponses(){
+        console.log(this.props.route.params.id)
         const bugRef = doc(db, "bugs", this.props.route.params.id);
         const bug = await getDoc(bugRef);
         
@@ -47,15 +50,14 @@ export default class BugDetail extends React.Component {
             var tempArray = [];
             this.setState({
                 creator:bug.data().ownerUsername,
-                timestamp: new Date(bug.data().createdAt)
+                timestamp: new Date(bug.data().createdAt),
+                bugID: this.props.route.params.id
             })
-            
+
             for( let i = 0 ; i < bug.data().responsesThread.length ; i++ ){
-                var objectResponse = {
-                    helper: bug.data().helpers[i],
-                    response: bug.data().responsesThread[i]
-                }
+                var objectResponse = bug.data().responsesThread[i]
                 tempArray.push(objectResponse);
+                console.log('asdasd')
             }
             this.setState({ responsesFromFirestore: tempArray})
         } else {
@@ -64,12 +66,24 @@ export default class BugDetail extends React.Component {
     }
 
     async componentDidMount(){
+        console.log('asdasd1')
         await this.getIDfromAsyncStorage();
+        console.log('asdasd2')
         await this.getResponses();
+        console.log('asdasd3')
+        if( this.state.creator === this.state.loggedUser ){
+            this.setState({isAbleToDecide: true})
+        }
     }
 
     addSolutionHandler(){
-        this.props.navigation.navigate("AddSolution")
+        this.props.navigation.navigate("AddSolution", { 
+            screenTitle: this.props.route.params.screenTitle,
+            bugDetail: this.props.route.params.bugDetail,
+            bugPoints: this.props.route.params.bugPoints,
+            bugID: this.state.bugID,
+            creatorName: this.props.route.params.creatorName,
+        })
     }
 
     render() {
@@ -177,7 +191,7 @@ export default class BugDetail extends React.Component {
                     <SafeAreaView>
                         <View style={{ alignItems:'center', width:'100%'}}>
                             { this.state.creator === this.state.loggedUser ?
-                                <Button style={{backgroundColor:"#262731", marginTop:"10%", width:"40%", height: 40}}
+                                <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"40%", height: 40}}
                                     theme={{ roundness: 20 }}
                                     mode="contained"
                                 >
@@ -185,7 +199,7 @@ export default class BugDetail extends React.Component {
                                 </Button>
                             :
 
-                                <Button style={{backgroundColor:"#262731", marginTop:"10%", width:"40%", height: 40}}
+                                <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"40%", height: 40}}
                                         theme={{ roundness: 20 }}
                                         mode="contained"
                                         onPress={ () => this.addSolutionHandler()}
@@ -194,14 +208,17 @@ export default class BugDetail extends React.Component {
                                 </Button>
                             }
                         </View>
-                        <FlatList   scrollEnabled={ true }
-                                    data={ this.state.responsesFromFirestore }
-                                    renderItem={ ({item}) => <CardBugs  title={ item.helper }
-                                                                        description={ item.response }
-                                                            /> 
-                                            }
-                                    keyExtractor={ item => item.response}
-                                    />
+                        <ScrollView>
+
+                                    { this.state.responsesFromFirestore.map( (item) => 
+                                        <CardSolution   key={ item.description }
+                                                        ownerUsername={ item.ownerUsername }
+                                                        timestamp={ item.createdAt }
+                                                        description={ item.description }
+                                                        isAbleToDecide= { this.state.isAbleToDecide }
+                                        /> 
+                                    )}
+                        </ScrollView>
                     </SafeAreaView>
                 }
             </ParallaxScrollView>
