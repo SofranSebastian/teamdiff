@@ -86,6 +86,16 @@ export default class BugDetail extends React.Component {
         })
     }
 
+    addInformationHandler(){
+        this.props.navigation.navigate("AddInformation", { 
+            screenTitle: this.props.route.params.screenTitle,
+            bugDetail: this.props.route.params.bugDetail,
+            bugPoints: this.props.route.params.bugPoints,
+            bugID: this.state.bugID,
+            creatorName: this.props.route.params.creatorName,
+        })
+    }
+
     render() {
   
         return (
@@ -191,12 +201,18 @@ export default class BugDetail extends React.Component {
                     <SafeAreaView>
                         <View style={{ alignItems:'center', width:'100%'}}>
                             { this.state.creator === this.state.loggedUser ?
-                                <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"40%", height: 40}}
-                                    theme={{ roundness: 20 }}
-                                    mode="contained"
-                                >
-                                    MARK SOLVED
-                                </Button>
+                                <View style={{width:"100%", alignItems:'center'}}>
+                                    <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"50%", height: 40}}
+                                            theme={{ roundness: 20 }}
+                                            mode="contained"
+                                            onPress={ () => this.addInformationHandler()}
+                                    >
+                                        ADD INFORMATIONS
+                                    </Button>
+                                    <Text style={{width:'80%', marginHorizontal:'10%', textAlign:'center',fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"gray" }}>
+                                        Don't forget to mark a solution by pressing the star icon on the solution that helped you to kill the bug
+                                    </Text>
+                                </View>
                             :
 
                                 <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"40%", height: 40}}
@@ -216,6 +232,7 @@ export default class BugDetail extends React.Component {
                                                         timestamp={ item.createdAt }
                                                         description={ item.description }
                                                         isAbleToDecide= { this.state.isAbleToDecide }
+                                                        loggedUsername= { this.state.loggedUser }
                                         /> 
                                     )}
                         </ScrollView>
