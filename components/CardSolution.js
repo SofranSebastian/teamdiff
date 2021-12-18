@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TouchableOpacity,  Linking, Text, View, Image } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, IconButton } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function CardSolution(props){
     return(
@@ -27,9 +28,15 @@ function CardSolution(props){
                         }}
                 >
                     <View style={{  flex:0.8, marginTop:'2%'}}>
-                        <Text style={{ marginLeft:'4%', fontSize:16, fontFamily:'normal-font', lineHeight:15,  color:"#262731" }}>
-                            • Solution
-                        </Text>
+                        {  props.ownerUsername === props.loggedUsername ?
+                            <Text style={{ marginLeft:'4%', fontSize:16, fontFamily:'normal-font', lineHeight:15,  color:"#262731" }}>
+                                • Information
+                            </Text>
+                        :
+                            <Text style={{ marginLeft:'4%', fontSize:16, fontFamily:'normal-font', lineHeight:15,  color:"#262731" }}>
+                                • Solution
+                            </Text>
+                        }
                         <Text numberOfLines={10} style={{ marginHorizontal:'4%', fontSize:14, fontFamily:'normal-font', lineHeight:15,  color:"#262731" }}>
                             { props.description }
                         </Text>
@@ -46,7 +53,7 @@ function CardSolution(props){
                                 { "Posted by " + props.ownerUsername + " at " +  new Date(props.timestamp).toUTCString()}
                             </Text>
                         </View>
-                        { props.isAbleToDecide === true ?
+                        { ( props.isAbleToDecide === true ) && ( props.ownerUsername !== props.loggedUsername  ) ?
                             <IconButton icon="star"
                                         size={20}
                                         color="white"
