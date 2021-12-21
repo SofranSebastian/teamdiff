@@ -103,13 +103,17 @@ function CardBugs(props){
                                 null
                             }
                             <Button   icon={'chevron-right'}
-                                        onPress={() => props.navigation.navigate("BugDetail",{  screenTitle: props.title,
-                                                                                                bugDetail: props.description,
-                                                                                                bugPoints: props.cost,
-                                                                                                isMyBug: props.isMyBug,
-                                                                                                id: props.id
-                                                                                            }
-                                                                                )
+                                        onPress={() => props.navigation.reset({
+                                                                index: 0,
+                                                                routes: [{ name: "BugDetail", params:{ screenTitle: props.title,
+                                                                                                        bugDetail: props.description,
+                                                                                                        bugPoints: props.cost,
+                                                                                                        isMyBug: props.isMyBug,
+                                                                                                        id: props.id,
+                                                                                                        creatorName: props.creator
+                                                                                                    }
+                                                                }]
+                                                        })                        
                                                 }
                                         color="#262731"
                                         labelStyle={{fontSize:8}}

@@ -43,6 +43,7 @@ export default class Profile extends React.Component{
         if (!querySnapshot.empty) {
             querySnapshot.forEach(bug => {
                 var bugFromFirestore = bug.data();
+                bugFromFirestore.bugID = bug.id;
                 this.bugsFromFirestore.push(bugFromFirestore)
             })
             return true;
@@ -149,7 +150,8 @@ export default class Profile extends React.Component{
                                                                     category={ item.category }
                                                                     needToSeeIfItIsResolved={ true }
                                                                     isResolved = { item.isResolved }
-                                                                    id = { item.id }
+                                                                    id = { item.bugID }
+                                                                    creator = { item.ownerUsername }
                                                           /> 
                                 }
                                 keyExtractor={ item => item.title}
