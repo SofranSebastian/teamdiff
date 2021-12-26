@@ -19,7 +19,8 @@ export default class BugDetail extends React.Component {
             loggedUser: "",
             timestamp: new Date(),
             bugID: "",
-            isAbleToDecide: false
+            isAbleToDecide: false,
+            isResolved: false
         }  
 
     }
@@ -51,7 +52,8 @@ export default class BugDetail extends React.Component {
             this.setState({
                 creator:bug.data().ownerUsername,
                 timestamp: new Date(bug.data().createdAt),
-                bugID: this.props.route.params.id
+                bugID: this.props.route.params.id,
+                isResolved: bug.data().isResolved
             })
 
             for( let i = 0 ; i < bug.data().responsesThread.length ; i++ ){
@@ -234,6 +236,9 @@ export default class BugDetail extends React.Component {
                                                         isAbleToDecide= { this.state.isAbleToDecide }
                                                         loggedUsername= { this.state.loggedUser }
                                                         bugCreator = { this.state.creator }
+                                                        bugID = { this.props.route.params.id }
+                                                        bugPoints = { this.props.route.params.bugPoints }
+                                                        isResolved = { this.state.isResolved }
                                         /> 
                                     )}
                         </ScrollView>
