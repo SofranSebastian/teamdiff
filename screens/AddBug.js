@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
-import { IconButton, TextInput, Button, HelperText, Chip, Avatar } from 'react-native-paper';
+import { IconButton, TextInput, Button, HelperText, Chip, Avatar} from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
@@ -8,7 +8,7 @@ import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase
 import { Camera } from 'expo-camera';
 import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import * as FileSystem from 'expo-file-system';
-
+import * as Progress from 'react-native-progress';
 export default class AddBug extends React.Component {
     constructor() {
         super();
@@ -34,7 +34,8 @@ export default class AddBug extends React.Component {
             errorFromDescriptionInput: false,
             errorFromPointsInput: false,
             cameraType: Camera.Constants.Type.back,
-            isCameraOn: false
+            isCameraOn: false,
+            uploadProgress: 0
         };
     }
 
@@ -138,30 +139,7 @@ export default class AddBug extends React.Component {
 
     postBug = async () => {
 
-        // let options = { encoding: FileSystem.EncodingType.Base64 };
-        // let file = FileSystem.readAsStringAsync(this.props.route.params.image, options).then(data => {
-        //     const base64 = 'data:image/jpg;base64' + data;
-        // }).catch(err => {
-        //     console.log("​getFile -> err", err);
-        // });
-        //var file = dataURLtoFile('data:image/png;base64,....', 'filename.png');
-
-
-        let base64 = this.props.route.params.image.base64
-        let append = 'data:image/jpg;base64,' + base64
-
-
-        // const metadata = {
-        //     contentType: 'image/jpeg'
-        // };
-
-        // let response = await fetch('http://127.0.0.1:8080/test.jpg');
-        // let data = await response.blob();
-        // let metadata = {
-        //   type: 'image/jpeg'
-        // };
-        // let file = new File([data], "test.jpg", metadata);
-
+        let downloadBugURL = ''
         let blob = await fetch(this.props.route.params.image.uri).then(r => r.blob());
         console.log(blob)
         let metadata = {
@@ -176,7 +154,8 @@ export default class AddBug extends React.Component {
         uploadTask.on('state_changed',
         (snapshot) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+          this.setState({uploadProgress:progress})
           console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
             case 'paused':
@@ -188,8 +167,6 @@ export default class AddBug extends React.Component {
           }
         }, 
         (error) => {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
           switch (error.code) {
             case 'storage/unauthorized':
               // User doesn't have permission to access the object
@@ -197,9 +174,6 @@ export default class AddBug extends React.Component {
             case 'storage/canceled':
               // User canceled the upload
               break;
-      
-            // ...
-      
             case 'storage/unknown':
               // Unknown error occurred, inspect error.serverResponse
               break;
@@ -207,77 +181,77 @@ export default class AddBug extends React.Component {
         }, 
         () => {
           // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
             console.log('File available at', downloadURL);
+            downloadBugURL = downloadURL;
+            if (this.checkTitle(this.state.titleFromInput)) {
+                if (this.checkCategory(this.state.selectedCategory)) {
+                    if (this.checkDescription(this.state.descriptionFromInput)) {
+                        if (this.checkPoints(this.state.selectedPoints)) {
+    
+                            await this.getIDfromAsyncStorage();
+                            console.log(this.userID);
+    
+                            let newBug = {
+                                title: this.state.titleFromInput,
+                                category: this.state.selectedCategory,
+                                description: this.state.descriptionFromInput,
+                                cost: Number(this.state.selectedPoints),
+                                helpers: Array(),
+                                responsesThread: Array(),
+                                createdAt: Date.now(),
+                                ownerID: this.userID,
+                                ownerUsername: this.userName,
+                                isResolved: false,
+                                imageURI: downloadBugURL
+                            };
+    
+                            // let date = new Date(newBug.createdAt);
+    
+                            // if (date.getTimezoneOffset() < 0) {
+                            //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
+                            // }
+                            // else {
+                            //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
+                            // }
+                            // console.log(date);
+                            
+    
+                            
+                            const userRef = doc(db, "users", this.userID);
+                            const userSnap = await getDoc(userRef);
+     
+                            let userPoints = userSnap.data().bugsScore;
+     
+                            if (userPoints >= this.state.selectedPoints) {
+                                
+                                const bugRef = await addDoc(bugsCol, newBug);
+                                
+                                await updateDoc(userRef, {
+                                    bugsScore: increment(-Number(this.state.selectedPoints)),
+                                    bugsAsked: increment(1),
+                                    bugs: arrayUnion(bugRef.id)
+                                });
+        
+    
+                                this.props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Home' }]
+                               });
+                            }
+                            else {
+                                this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                                this.setState({errorFromPointsInput: true});
+                            }
+                        }
+                    }
+                }
+            }
           });
         }
       );
 
-        // uploadTask.on('state_changed',
-        //     (snapshot) => {})
-        // if (this.checkTitle(this.state.titleFromInput)) {
-        //     if (this.checkCategory(this.state.selectedCategory)) {
-        //         if (this.checkDescription(this.state.descriptionFromInput)) {
-        //             if (this.checkPoints(this.state.selectedPoints)) {
-
-        //                 await this.getIDfromAsyncStorage();
-        //                 console.log(this.userID);
-
-        //                 let newBug = {
-        //                     title: this.state.titleFromInput,
-        //                     category: this.state.selectedCategory,
-        //                     description: this.state.descriptionFromInput,
-        //                     cost: Number(this.state.selectedPoints),
-        //                     helpers: Array(),
-        //                     responsesThread: Array(),
-        //                     createdAt: Date.now(),
-        //                     ownerID: this.userID,
-        //                     ownerUsername: this.userName,
-        //                     isResolved: false,
-        //                     imageURI
-        //                 };
-
-        //                 // let date = new Date(newBug.createdAt);
-
-        //                 // if (date.getTimezoneOffset() < 0) {
-        //                 //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-        //                 // }
-        //                 // else {
-        //                 //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-        //                 // }
-        //                 // console.log(date);
-                        
-
-                        
-        //                 const userRef = doc(db, "users", this.userID);
-        //                 const userSnap = await getDoc(userRef);
- 
-        //                 let userPoints = userSnap.data().bugsScore;
- 
-        //                 if (userPoints >= this.state.selectedPoints) {
-                            
-        //                     const bugRef = await addDoc(bugsCol, newBug);
-                            
-        //                     await updateDoc(userRef, {
-        //                         bugsScore: increment(-Number(this.state.selectedPoints)),
-        //                         bugsAsked: increment(1),
-        //                         bugs: arrayUnion(bugRef.id)
-        //                     });
-    
-
-        //                     this.props.navigation.reset({
-        //                         index: 0,
-        //                         routes: [{ name: 'Home' }]
-        //                    });
-        //                 }
-        //                 else {
-        //                     this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
-        //                     this.setState({errorFromPointsInput: true});
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        
     }
 
     render() {
@@ -506,9 +480,7 @@ export default class AddBug extends React.Component {
                         mode="contained"
                         onPress = { this.postBug }
                         >
-                            <Text style={ {fontSize: 14, fontWeight: 'bold', marginBottom: 20, color: "white"} }>
                                     POST BUG
-                            </Text>
                         </Button>
                         <Button 
                         style={ {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"55%", height: 40, alignSelf: 'center'} }
@@ -522,19 +494,27 @@ export default class AddBug extends React.Component {
                                                 Alert.alert("Access denied")
                                             } 
                                         }
-                                    }
-                                    
+                                    }  
                         >
-                                <Text style={ {fontSize: 10, fontWeight: 'bold', marginBottom: 20, color: "white"} }>
-                                    UPLOAD IMAGE (*optional)
-                                </Text>
+                                    UPLOAD (*optional)
                         </Button>
                         { this.props.route.params.image !== null ?
-                            <View style={{alignItems:'center', width:'100%'}}>
+                            <View style={{alignItems:'center', width:'100%',justifyContent:'center'}}>
                                 <Avatar.Icon size={24} icon="image-plus" style={{backgroundColor:"#262731"}} />
-                                <Text style={ {fontSize: 10, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
-                                    Image Uploaded
-                                </Text>
+                                { this.state.uploadProgress === 0 ?
+                                    <Text style={ {fontSize: 10, fontWeight: 'bold', color: "#262731"} }>
+                                        Image Ready
+                                    </Text>
+                                :
+                                    <Text style={ {fontSize: 10, fontWeight: 'bold', color: "#262731"} }>
+                                        Image Uploaded
+                                    </Text>
+                                }
+                                { this.state.uploadProgress > 0 ?
+                                    <Progress.Bar progress={this.state.uploadProgress} width={250} color="#262731" style={{marginBottom:'2%'}}/>
+                                :
+                                    null
+                                }
                             </View>
                             :
                             null
