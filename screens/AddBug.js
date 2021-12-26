@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip, Avatar } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
+import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable  } from "firebase/storage";
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -118,68 +119,82 @@ export default class AddBug extends React.Component {
     }
 
     postBug = async () => {
-        if (this.checkTitle(this.state.titleFromInput)) {
-            if (this.checkCategory(this.state.selectedCategory)) {
-                if (this.checkDescription(this.state.descriptionFromInput)) {
-                    if (this.checkPoints(this.state.selectedPoints)) {
+        let base64 = this.props.route.params.image.base64;
+        let append = 'data:image/jpg;base64,' + base64
+        console.log(this.props.route.params.image)
 
-                        await this.getIDfromAsyncStorage();
-                        console.log(this.userID);
+        const metadata = {
+            contentType: 'image/jpeg'
+        };
 
-                        let newBug = {
-                            title: this.state.titleFromInput,
-                            category: this.state.selectedCategory,
-                            description: this.state.descriptionFromInput,
-                            cost: Number(this.state.selectedPoints),
-                            helpers: Array(),
-                            responsesThread: Array(),
-                            createdAt: Date.now(),
-                            ownerID: this.userID,
-                            ownerUsername: this.userName,
-                            isResolved: false
-                        };
+        const storage = getStorage();
+        const bugRef = ref(storage, 'images/' + new Date().toISOString());
+        const uploadTask = uploadBytesResumable(bugRef, this.props.route.params.image, metadata);
+        uploadTask.on('state_changed',
+            (snapshot) => {})
+        // if (this.checkTitle(this.state.titleFromInput)) {
+        //     if (this.checkCategory(this.state.selectedCategory)) {
+        //         if (this.checkDescription(this.state.descriptionFromInput)) {
+        //             if (this.checkPoints(this.state.selectedPoints)) {
 
-                        // let date = new Date(newBug.createdAt);
+        //                 await this.getIDfromAsyncStorage();
+        //                 console.log(this.userID);
 
-                        // if (date.getTimezoneOffset() < 0) {
-                        //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                        // }
-                        // else {
-                        //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                        // }
-                        // console.log(date);
+        //                 let newBug = {
+        //                     title: this.state.titleFromInput,
+        //                     category: this.state.selectedCategory,
+        //                     description: this.state.descriptionFromInput,
+        //                     cost: Number(this.state.selectedPoints),
+        //                     helpers: Array(),
+        //                     responsesThread: Array(),
+        //                     createdAt: Date.now(),
+        //                     ownerID: this.userID,
+        //                     ownerUsername: this.userName,
+        //                     isResolved: false,
+        //                     imageURI
+        //                 };
+
+        //                 // let date = new Date(newBug.createdAt);
+
+        //                 // if (date.getTimezoneOffset() < 0) {
+        //                 //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
+        //                 // }
+        //                 // else {
+        //                 //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
+        //                 // }
+        //                 // console.log(date);
                         
 
                         
-                        const userRef = doc(db, "users", this.userID);
-                        const userSnap = await getDoc(userRef);
+        //                 const userRef = doc(db, "users", this.userID);
+        //                 const userSnap = await getDoc(userRef);
  
-                        let userPoints = userSnap.data().bugsScore;
+        //                 let userPoints = userSnap.data().bugsScore;
  
-                        if (userPoints >= this.state.selectedPoints) {
+        //                 if (userPoints >= this.state.selectedPoints) {
                             
-                            const bugRef = await addDoc(bugsCol, newBug);
+        //                     const bugRef = await addDoc(bugsCol, newBug);
                             
-                            await updateDoc(userRef, {
-                                bugsScore: increment(-Number(this.state.selectedPoints)),
-                                bugsAsked: increment(1),
-                                bugs: arrayUnion(bugRef.id)
-                            });
+        //                     await updateDoc(userRef, {
+        //                         bugsScore: increment(-Number(this.state.selectedPoints)),
+        //                         bugsAsked: increment(1),
+        //                         bugs: arrayUnion(bugRef.id)
+        //                     });
     
 
-                            this.props.navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'Home' }]
-                           });
-                        }
-                        else {
-                            this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
-                            this.setState({errorFromPointsInput: true});
-                        }
-                    }
-                }
-            }
-        }
+        //                     this.props.navigation.reset({
+        //                         index: 0,
+        //                         routes: [{ name: 'Home' }]
+        //                    });
+        //                 }
+        //                 else {
+        //                     this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+        //                     this.setState({errorFromPointsInput: true});
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     render() {
@@ -403,15 +418,17 @@ export default class AddBug extends React.Component {
                     </View>
                 </KeyboardAwareScrollView>
                         <Button 
-                        style={ {backgroundColor: "#262731", marginBottom:"2%", width:"40%", height: 40, alignSelf: 'center'} }
+                        style={ {backgroundColor: "#262731", marginBottom:"2%", width:"55%", height: 40, alignSelf: 'center'} }
                         theme={ {roundness: 20} }
                         mode="contained"
                         onPress = { this.postBug }
                         >
-                            POST BUG
+                            <Text style={ {fontSize: 14, fontWeight: 'bold', marginBottom: 20, color: "white"} }>
+                                    POST BUG
+                            </Text>
                         </Button>
                         <Button 
-                        style={ {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"40%", height: 40, alignSelf: 'center'} }
+                        style={ {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"55%", height: 40, alignSelf: 'center'} }
                         theme={ {roundness: 20} }
                         mode="contained"
                         onPress = { async () => {  
@@ -425,13 +442,14 @@ export default class AddBug extends React.Component {
                                     }
                                     
                         >
-                            UPLOAD IMAGE
-                            *optional*
+                                <Text style={ {fontSize: 10, fontWeight: 'bold', marginBottom: 20, color: "white"} }>
+                                    UPLOAD IMAGE (*optional)
+                                </Text>
                         </Button>
-                        { this.props.route.params.imageURI !== null ?
-                            <View>
-                                <Avatar.Icon size={24} icon="image-plus" />
-                                <Text>
+                        { this.props.route.params.image !== null ?
+                            <View style={{alignItems:'center', width:'100%'}}>
+                                <Avatar.Icon size={24} icon="image-plus" style={{backgroundColor:"#262731"}} />
+                                <Text style={ {fontSize: 10, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
                                     Image Uploaded
                                 </Text>
                             </View>
