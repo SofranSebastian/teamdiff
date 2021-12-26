@@ -14,6 +14,7 @@ import AddBug from "../screens/AddBug";
 import BugDetail from "../screens/BugDetail";
 import AddSolution from '../screens/AddSolution';
 import AddInformation from '../screens/AddInformation';
+import CameraScreen from '../screens/CameraScreen';
 
 const MainStack = createNativeStackNavigator();
 
@@ -87,7 +88,15 @@ function AppMainStack() {
                                             headerShown:false,
                                         })
                                     }
-                />                     
+                />      
+                <MainStack.Screen   name = "CameraScreen"
+                                    component = { CameraScreen }
+                                    options = {
+                                        ({ navigation, route }) => ({
+                                            headerShown:false,
+                                        })
+                                    }
+                />                                    
             </MainStack.Navigator>
         </NavigationContainer>
     )
