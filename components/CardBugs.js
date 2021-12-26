@@ -9,6 +9,12 @@ function returnImageUrl( category ){
         return {uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/695px-C_Programming_Language.svg.png"}
     }else if( category === "Java" ){
         return {uri:"https://wallpapercave.com/wp/wp7250034.jpg"}
+    }else if( category === "Python" ){
+        return {uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"}
+    }else if( category === "Scala" ){
+        return {uri:"https://www.lifepng.com/wp-content/uploads/2020/11/Scala-Logo-png-hd.png"}
+    }else if( category === "C++" ){
+        return {uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/1200px-ISO_C%2B%2B_Logo.svg.png"}
     }
 }
 
