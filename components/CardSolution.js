@@ -28,7 +28,7 @@ function CardSolution(props){
                         }}
                 >
                     <View style={{  flex:0.8, marginTop:'2%'}}>
-                        {  props.ownerUsername === props.loggedUsername ?
+                        {  props.bugCreator === props.ownerUsername ?
                             <Text style={{ marginLeft:'4%', fontSize:16, fontFamily:'normal-font', lineHeight:15,  color:"#262731" }}>
                                 • Information
                             </Text>
