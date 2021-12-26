@@ -1,10 +1,9 @@
 import React from "react";
-import { FlatList, useWindowDimensions, TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView, StatusBar } from 'react-native';
-import { TextInput, Button, IconButton, HelperText, Avatar } from 'react-native-paper';
-import { db, bugsCol } from "../db/firebaseDB";
-import { doc, getDocs, onSnapshot, query, where, getDoc } from "firebase/firestore";
+import { TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { Button, IconButton, Avatar } from 'react-native-paper';
+import { db } from "../db/firebaseDB";
+import { doc, getDoc } from "firebase/firestore";
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import Swiper from 'react-native-swiper';
 import CardSolution from "../components/CardSolution";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default class BugDetail extends React.Component {
@@ -19,7 +18,8 @@ export default class BugDetail extends React.Component {
             loggedUser: "",
             timestamp: new Date(),
             bugID: "",
-            isAbleToDecide: false
+            isAbleToDecide: false,
+            isResolved: false
         }  
 
     }
@@ -51,12 +51,18 @@ export default class BugDetail extends React.Component {
             this.setState({
                 creator:bug.data().ownerUsername,
                 timestamp: new Date(bug.data().createdAt),
-                bugID: this.props.route.params.id
+                bugID: this.props.route.params.id,
+                isResolved: bug.data().isResolved
             })
 
             for( let i = 0 ; i < bug.data().responsesThread.length ; i++ ){
                 var objectResponse = bug.data().responsesThread[i]
                 tempArray.push(objectResponse);
+                tempArray.sort( function( a , b){
+                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return -1;
+                    return 0;
+                });
                 console.log('asdasd')
             }
             this.setState({ responsesFromFirestore: tempArray})
@@ -201,10 +207,21 @@ export default class BugDetail extends React.Component {
                     <SafeAreaView>
                         <View style={{ alignItems:'center', width:'100%'}}>
                             { this.state.creator === this.state.loggedUser ?
-                                <View style={{width:"100%", alignItems:'center'}}>
-                                    <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"50%", height: 40}}
+                                <View style={{width:"100%", alignItems:'center', marginTop:'5%'}}>
+                                    {   this.state.isResolved === true ?
+                                             <View style={{alignItems:'center', justifyContent:'center', height:50}}>
+                                                <Avatar.Icon size={30} icon="bug-check" style={{backgroundColor:"#262731"}}/>
+                                                <Text style={{width:'80%', marginHorizontal:'10%', textAlign:'center',fontSize:12, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>
+                                                   SOLVED
+                                                </Text>
+                                            </View>
+                                            :
+                                            null
+                                    }
+                                    <Button style={{backgroundColor:"#262731", marginBottom:"5%", width:"50%", height: 40}}
                                             theme={{ roundness: 20 }}
                                             mode="contained"
+                                            disabled={ this.state.isResolved }
                                             onPress={ () => this.addInformationHandler()}
                                     >
                                         ADD INFORMATIONS
@@ -214,14 +231,26 @@ export default class BugDetail extends React.Component {
                                     </Text>
                                 </View>
                             :
-
-                                <Button style={{backgroundColor:"#262731", marginVertical:"5%", width:"40%", height: 40}}
-                                        theme={{ roundness: 20 }}
-                                        mode="contained"
-                                        onPress={ () => this.addSolutionHandler()}
-                                >
-                                    ADD SOLUTION
-                                </Button>
+                                <View style={{width:"100%", alignItems:'center', marginTop:'5%'}}>
+                                    {  this.state.isResolved === true ?
+                                            <View style={{alignItems:'center', justifyContent:'center', height:50}}>
+                                                <Avatar.Icon size={30} icon="bug-check" style={{backgroundColor:"#262731"}}/>
+                                                <Text style={{width:'80%', marginHorizontal:'10%', textAlign:'center',fontSize:12, fontFamily:'normal-font', fontWeight:'bold', color:"#262731" }}>
+                                                   SOLVED
+                                                </Text>
+                                            </View>
+                                            :
+                                            null
+                                    }
+                                    <Button style={{backgroundColor:"#262731", marginBottom:"5%", width:"40%", height: 40}}
+                                            theme={{ roundness: 20 }}
+                                            mode="contained"
+                                            disabled={ this.state.isResolved }
+                                            onPress={ () => this.addSolutionHandler()}
+                                    >
+                                        ADD SOLUTION
+                                    </Button>
+                                </View>
                             }
                         </View>
                         <ScrollView>
@@ -233,6 +262,14 @@ export default class BugDetail extends React.Component {
                                                         description={ item.description }
                                                         isAbleToDecide= { this.state.isAbleToDecide }
                                                         loggedUsername= { this.state.loggedUser }
+                                                        bugCreator = { this.state.creator }
+                                                        bugID = { this.props.route.params.id }
+                                                        bugPoints = { this.props.route.params.bugPoints }
+                                                        isResolved = { this.state.isResolved }
+                                                        isBest = { item.isBest }
+                                                        screenTitle = {this.props.route.params.screenTitle}
+                                                        bugDetail={ this.props.route.params.bugDetail }
+                                                        navigation={this.props.navigation}
                                         /> 
                                     )}
                         </ScrollView>
