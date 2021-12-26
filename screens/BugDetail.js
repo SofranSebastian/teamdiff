@@ -233,6 +233,7 @@ export default class BugDetail extends React.Component {
                                                         description={ item.description }
                                                         isAbleToDecide= { this.state.isAbleToDecide }
                                                         loggedUsername= { this.state.loggedUser }
+                                                        bugCreator = { this.state.creator }
                                         /> 
                                     )}
                         </ScrollView>
