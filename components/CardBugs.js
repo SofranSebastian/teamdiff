@@ -110,7 +110,8 @@ function CardBugs(props){
                                                                                                         bugPoints: props.cost,
                                                                                                         isMyBug: props.isMyBug,
                                                                                                         id: props.id,
-                                                                                                        creatorName: props.creator
+                                                                                                        creatorName: props.creator,
+                                                                                                        image: props.image
                                                                                                     }
                                                                 }]
                                                         })                        
