@@ -28,7 +28,7 @@ export default class BottomNavigator extends React.Component {
                                 }}
                         icon="plus"
                         color="white"
-                        onPress={ () => this.props.navigation.navigate("AddBug",{imageURI:null})}
+                        onPress={ () => this.props.navigation.navigate("AddBug",{image:null})}
                     />
                 </View>
                 <View style={{  position: 'absolute', 
