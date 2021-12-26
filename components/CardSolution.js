@@ -2,6 +2,56 @@ import * as React from 'react';
 import { TouchableOpacity,  Linking, Text, View, Image } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, IconButton } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db, usersCol } from "../db/firebaseDB";
+import { doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, increment, } from "firebase/firestore";
+
+async function getSolutionOwnerID(props){
+    const q = query(collection(db, "users"), where("username", "==", props.ownerUsername));
+    const querySnapshot = await getDocs(q);
+    
+    let id = null;
+
+    querySnapshot.forEach((doc) => {
+      id = doc.id
+    });
+
+    return id;
+}
+
+async function getBugOwnerID(props){
+    const q = query(collection(db, "users"), where("username", "==", props.bugCreator));
+
+    const querySnapshot = await getDocs(q);
+    
+    let id = "";
+
+    querySnapshot.forEach((doc) => {
+      id = doc.id
+    });
+
+    return id;
+}
+
+async function markResolved(props){
+    let userSolutionID = await getSolutionOwnerID(props);
+    let userBugID = await getBugOwnerID(props);
+    let bugID = props.bugID
+
+    console.log(userSolutionID)
+    console.log(bugID)
+
+    const userRef = doc(db, "users", userSolutionID);
+    await updateDoc(userRef, {
+        bugsScore: increment(+Number(props.bugPoints)),
+        bugsFixed: increment(1),
+    });
+
+    const bugRef = doc(db, "bugs", bugID)
+    await updateDoc(bugRef, {
+        isResolved:true
+    });  
+}
 
 function CardSolution(props){
     return(
@@ -57,8 +107,9 @@ function CardSolution(props){
                             <IconButton icon="star"
                                         size={20}
                                         color="white"
+                                        disabled = { props.isResolved }
                                         style={{backgroundColor:"#262731"}}
-                                        onPress={() => console.log('Pressed')}
+                                        onPress={() => markResolved(props)}
                             />
                         :
                             null
