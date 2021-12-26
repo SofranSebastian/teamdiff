@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { IconButton, TextInput, Button, HelperText, Chip } from 'react-native-paper';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { IconButton, TextInput, Button, HelperText, Chip, Avatar } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
+import { Camera } from 'expo-camera';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -29,7 +30,9 @@ export default class AddBug extends React.Component {
             errorFromTitleInput: false,
             errorFromCategoryInput: false,
             errorFromDescriptionInput: false,
-            errorFromPointsInput: false
+            errorFromPointsInput: false,
+            cameraType: Camera.Constants.Type.back,
+            isCameraOn: false
         };
     }
 
@@ -181,7 +184,7 @@ export default class AddBug extends React.Component {
 
     render() {
         return(
-            <View style={ {flex: 1, backgroundColor: 'white'} }> 
+            <View style={ {flex: 1, backgroundColor: 'white'} }>                       
                 <IconButton
                     icon='chevron-left'
                     style={ {flex: 0.1, position: 'absolute', marginTop: 40, zIndex: 1} }
@@ -399,14 +402,42 @@ export default class AddBug extends React.Component {
                         </HelperText>
                     </View>
                 </KeyboardAwareScrollView>
-                    <Button 
-                    style={ {backgroundColor: "#262731", marginTop: "5%", marginBottom:"5%", width:"40%", height: 40, alignSelf: 'center'} }
-                    theme={ {roundness: 20} }
-                    mode="contained"
-                    onPress = { this.postBug }
-                    >
-                        POST BUG
-                    </Button>
+                        <Button 
+                        style={ {backgroundColor: "#262731", marginBottom:"2%", width:"40%", height: 40, alignSelf: 'center'} }
+                        theme={ {roundness: 20} }
+                        mode="contained"
+                        onPress = { this.postBug }
+                        >
+                            POST BUG
+                        </Button>
+                        <Button 
+                        style={ {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"40%", height: 40, alignSelf: 'center'} }
+                        theme={ {roundness: 20} }
+                        mode="contained"
+                        onPress = { async () => {  
+                                            const {status} = await Camera.requestPermissionsAsync()
+                                            if(status === 'granted'){
+                                                this.props.navigation.navigate('CameraScreen')
+                                            }else{
+                                                Alert.alert("Access denied")
+                                            } 
+                                        }
+                                    }
+                                    
+                        >
+                            UPLOAD IMAGE
+                            *optional*
+                        </Button>
+                        { this.props.route.params.imageURI !== null ?
+                            <View>
+                                <Avatar.Icon size={24} icon="image-plus" />
+                                <Text>
+                                    Image Uploaded
+                                </Text>
+                            </View>
+                            :
+                            null
+                        }
             </View>   
         )
     }
