@@ -207,7 +207,6 @@ export default class BugDetail extends React.Component {
                                                         minZoom={1}
                                                         zoomStep={0.5}
                                                         initialZoom={1}
-                                                        bindToBorders={true}
                                                         style={{
                                                             backgroundColor: 'white',
                                                             marginLeft:5
