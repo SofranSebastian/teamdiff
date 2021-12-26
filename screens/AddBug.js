@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip, Avatar } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
-import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable  } from "firebase/storage";
+import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import * as FileSystem from 'expo-file-system';
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -118,20 +119,102 @@ export default class AddBug extends React.Component {
 
     }
 
+    dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type:mime});
+        }
+
+        urlToObject= async(location)=> {
+            const response = await fetch(location);
+            // here image is url/location of image
+            const blob = await response.blob();
+            const file = new File([blob], 'image.jpg', {type: blob.type});
+            console.log(file);
+          }
+
     postBug = async () => {
-        let base64 = this.props.route.params.image.base64;
+
+        // let options = { encoding: FileSystem.EncodingType.Base64 };
+        // let file = FileSystem.readAsStringAsync(this.props.route.params.image, options).then(data => {
+        //     const base64 = 'data:image/jpg;base64' + data;
+        // }).catch(err => {
+        //     console.log("​getFile -> err", err);
+        // });
+        //var file = dataURLtoFile('data:image/png;base64,....', 'filename.png');
+
+
+        let base64 = this.props.route.params.image.base64
         let append = 'data:image/jpg;base64,' + base64
-        console.log(this.props.route.params.image)
 
-        const metadata = {
-            contentType: 'image/jpeg'
+
+        // const metadata = {
+        //     contentType: 'image/jpeg'
+        // };
+
+        // let response = await fetch('http://127.0.0.1:8080/test.jpg');
+        // let data = await response.blob();
+        // let metadata = {
+        //   type: 'image/jpeg'
+        // };
+        // let file = new File([data], "test.jpg", metadata);
+
+        let blob = await fetch(this.props.route.params.image.uri).then(r => r.blob());
+        console.log(blob)
+        let metadata = {
+          type: 'image/jpeg'
         };
-
+        let file = new File([blob], "test.jpg", metadata);
+        console.log(file)
         const storage = getStorage();
         const bugRef = ref(storage, 'images/' + new Date().toISOString());
-        const uploadTask = uploadBytesResumable(bugRef, this.props.route.params.image, metadata);
+        const uploadTask = uploadBytesResumable(bugRef, file, metadata);
+
         uploadTask.on('state_changed',
-            (snapshot) => {})
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        }, 
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+      
+            // ...
+      
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        }, 
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+          });
+        }
+      );
+
+        // uploadTask.on('state_changed',
+        //     (snapshot) => {})
         // if (this.checkTitle(this.state.titleFromInput)) {
         //     if (this.checkCategory(this.state.selectedCategory)) {
         //         if (this.checkDescription(this.state.descriptionFromInput)) {
