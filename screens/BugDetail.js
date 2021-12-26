@@ -1,10 +1,9 @@
 import React from "react";
-import { FlatList, useWindowDimensions, TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView, StatusBar } from 'react-native';
-import { TextInput, Button, IconButton, HelperText, Avatar } from 'react-native-paper';
-import { db, bugsCol } from "../db/firebaseDB";
-import { doc, getDocs, onSnapshot, query, where, getDoc } from "firebase/firestore";
+import { TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { Button, IconButton, Avatar } from 'react-native-paper';
+import { db } from "../db/firebaseDB";
+import { doc, getDoc } from "firebase/firestore";
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import Swiper from 'react-native-swiper';
 import CardSolution from "../components/CardSolution";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default class BugDetail extends React.Component {
