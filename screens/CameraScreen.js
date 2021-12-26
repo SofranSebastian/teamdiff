@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions,  ImageBackground  } from 'react-native';
-import { IconButton, TextInput, Button, HelperText, Chip } from 'react-native-paper';
+import { IconButton, TextInput, Button, HelperText, Chip, } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
@@ -96,11 +96,11 @@ export default class CameraScreen extends React.Component {
                             <ImageManipulator
                                 photo={this.state.image}
                                 isVisible={true}
-                                onPictureChoosed={uriM =>  console.log(uriM)}
+                                onPictureChoosed={uriM =>  this.props.navigation.navigate('AddBug',{image:this.state.image})}
                                 onToggleModal={()=>this.setState({showPicture:false})}
                                 saveOptions={{
                                     compress: 1,
-                                    format: 'png',
+                                    format: 'jpeg',
                                     base64: true, 
                                 }}
                                 btnTexts={{
