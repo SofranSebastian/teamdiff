@@ -10,6 +10,7 @@ import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
 import { ImageManipulator } from 'expo-image-crop'
+import ImgToBase64 from 'react-native-image-base64';
 
 
 export default class CameraScreen extends React.Component {
@@ -20,17 +21,20 @@ export default class CameraScreen extends React.Component {
             cameraType: Camera.Constants.Type.back,
             isFlashOn: 'off',
             showPicture: false,
-            imageURI: {}
+            image: {},
         };
     }
 
     snap = async () => {
-        console.log(this.state.isFlashOn)
+        let options={
+            base64:true
+        }
         if (this.camera) {
-          let photo = await this.camera.takePictureAsync();
-          this.setState({   showPicture:true,
-                            imageURI: photo.uri
-        })                  
+          let photo = await this.camera.takePictureAsync(options);
+            this.setState({     showPicture:true,
+                                image: photo,
+            }) 
+   
         }
       };
 
@@ -49,7 +53,7 @@ export default class CameraScreen extends React.Component {
                                         size={40}
                                         color="white"
                                         style={{backgroundColor:"#262731"}}
-                                        onPress={() => this.snap()}
+                                        onPress={async() => await this.snap()}
                             />
                     </View>
                     <View style={{position:'absolute', top:'10%', right:'5%', alignItems:'center', justifyContent:'center'}}> 
@@ -83,21 +87,21 @@ export default class CameraScreen extends React.Component {
                                         size={30}
                                         color="white"
                                         style={{backgroundColor:"#262731"}}
-                                        onPress={() => this.props.navigation.navigate('AddBug')}
+                                        onPress={() => this.props.navigation.navigate('AddBug',{image:null})}
                             />
                     </View>
                     { this.state.showPicture === true ?
                             <View style={{width:'100%', height:'100%', backgroundColor:'black'}}>
                          
                             <ImageManipulator
-                                photo={{uri:this.state.imageURI, height:'100%', width:'100%'}}
+                                photo={this.state.image}
                                 isVisible={true}
-                                onPictureChoosed={uriM => this.props.navigation.navigate('AddBug', {imageURI: uriM})}
+                                onPictureChoosed={uriM =>  console.log(uriM)}
                                 onToggleModal={()=>this.setState({showPicture:false})}
                                 saveOptions={{
                                     compress: 1,
                                     format: 'png',
-                                    base64: true,
+                                    base64: true, 
                                 }}
                                 btnTexts={{
                                     done: 'Ok',
