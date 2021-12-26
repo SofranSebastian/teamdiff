@@ -152,6 +152,7 @@ export default class Profile extends React.Component{
                                                                     isResolved = { item.isResolved }
                                                                     id = { item.bugID }
                                                                     creator = { item.ownerUsername }
+                                                                    image = { item.imageURI }
                                                           /> 
                                 }
                                 keyExtractor={ item => item.title}

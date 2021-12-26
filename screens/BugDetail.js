@@ -6,6 +6,8 @@ import { doc, getDoc } from "firebase/firestore";
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import CardSolution from "../components/CardSolution";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+
 export default class BugDetail extends React.Component {
 
     constructor(){
@@ -199,8 +201,19 @@ export default class BugDetail extends React.Component {
                                 </Text>
                             </View>
                             <View style={{backgroundColor:"#262731", marginLeft:5, marginTop:15, marginBottom:5, alignSelf:'flex-start', borderRadius:20}}>
-                                <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>📷  BUG IMAGES</Text>
+                                <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>📷  BUG IMAGE</Text>
                             </View>
+                            <ReactNativeZoomableView    maxZoom={2}
+                                                        minZoom={1}
+                                                        zoomStep={0.5}
+                                                        initialZoom={1}
+                                                        style={{
+                                                            backgroundColor: 'white',
+                                                            marginLeft:5
+                                                        }}
+                            >
+                                <Image source={{uri:this.props.route.params.image}} style={{width:'90%', height:250}}/>
+                            </ReactNativeZoomableView>
 
                         </View>
                     :

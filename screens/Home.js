@@ -172,6 +172,7 @@ export default class Home extends React.Component {
                                                                       needToSeeIfItIsResolved={ false }
                                                                       isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
                                                                       id = { item.id }
+                                                                      image = { item.imageURI}
                                                           /> 
                                           }
                                   refreshing={this.state.refresh}
