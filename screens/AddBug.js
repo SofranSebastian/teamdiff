@@ -205,14 +205,17 @@ export default class AddBug extends React.Component {
                         }
 
                         // upload image to firebase storage
-                        const response = await fetch(this.state.image);
-                        const blob = await response.blob();
 
-                        const storage = getStorage();
-                        const storageRef = ref(storage, `images/${this.state.imageName}`);
-                        uploadBytes(storageRef, blob).then((snapshot) => {
-                            console.log('Uploaded a blob or file!');
-                        });
+                        if (isChosen) {
+                            const response = await fetch(this.state.image);
+                            const blob = await response.blob();
+
+                            const storage = getStorage();
+                            const storageRef = ref(storage, `images/${this.state.imageName}`);
+                            uploadBytes(storageRef, blob).then((snapshot) => {
+                                console.log('Uploaded a blob or file!');
+                            });
+                        }
                     }
                 }
             }
