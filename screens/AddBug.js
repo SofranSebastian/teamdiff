@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 export default class AddBug extends React.Component {
     constructor() {
@@ -29,7 +31,10 @@ export default class AddBug extends React.Component {
             errorFromTitleInput: false,
             errorFromCategoryInput: false,
             errorFromDescriptionInput: false,
-            errorFromPointsInput: false
+            errorFromPointsInput: false,
+            image: "No image selected",
+            isChosen: false,
+            imageName: null
         };
     }
 
@@ -110,6 +115,28 @@ export default class AddBug extends React.Component {
         return true;
     }
 
+    pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            this.setState({image: result.uri, isChosen: true});
+            let tokens = this.state.image.split("/");
+            
+            // get the image name only (<random-text>.jpg)
+            let imageName = tokens[tokens.length-1];
+            
+            console.log(imageName);
+            this.setState({imageName: imageName});
+        }
+    }
+
     componentDidMount(){
 
     }
@@ -136,6 +163,12 @@ export default class AddBug extends React.Component {
                             isResolved: false
                         };
 
+                        if (this.state.isChosen) {
+                            newBug.image = this.state.imageName;
+                        }
+                        else {
+                            newBug.image = null;
+                        }
                         // let date = new Date(newBug.createdAt);
 
                         // if (date.getTimezoneOffset() < 0) {
@@ -145,8 +178,6 @@ export default class AddBug extends React.Component {
                         //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
                         // }
                         // console.log(date);
-                        
-
                         
                         const userRef = doc(db, "users", this.userID);
                         const userSnap = await getDoc(userRef);
@@ -163,7 +194,6 @@ export default class AddBug extends React.Component {
                                 bugs: arrayUnion(bugRef.id)
                             });
     
-
                             this.props.navigation.reset({
                                 index: 0,
                                 routes: [{ name: 'Home' }]
@@ -173,6 +203,16 @@ export default class AddBug extends React.Component {
                             this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
                             this.setState({errorFromPointsInput: true});
                         }
+
+                        // upload image to firebase storage
+                        const response = await fetch(this.state.image);
+                        const blob = await response.blob();
+
+                        const storage = getStorage();
+                        const storageRef = ref(storage, `images/${this.state.imageName}`);
+                        uploadBytes(storageRef, blob).then((snapshot) => {
+                            console.log('Uploaded a blob or file!');
+                        });
                     }
                 }
             }
@@ -397,6 +437,16 @@ export default class AddBug extends React.Component {
                         <HelperText  type="error" visible={ this.state.errorFromPointsInput } style={{width:'90%'}}>
                             { this.pointsErrorMessage }
                         </HelperText>
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
+                            IMAGE
+                        </Text>
+                        <Button
+                            style={ {backgroundColor: "#F5F5F5", marginBottom:"5%", width:"40%"} }
+                            theme={ {roundness: 20} }
+                            mode="outlined"
+                            color="black"
+                            onPress = { this.pickImage }>CHOOSE</Button>
+                        {this.state.image && <Image source={{ uri: this.state.image }} style={ this.state.isChosen ? { width: "100%", height: 200 } : {}} />}
                     </View>
                 </KeyboardAwareScrollView>
                     <Button 
