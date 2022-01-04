@@ -36,11 +36,6 @@ function CardBugs(props){
                             elevation: 3,
                         }}
             >
-                {/* <Card.Title title={ props.title.toUpperCase()  +  " 💰" + props.cost + "p" }
-                            titleStyle={{ fontSize:12, fontFamily:'normal-font', fontWeight:'bold', lineHeight:15,  color:"#262731" }}
-                            titleNumberOfLines={4}
-                            subtitleStyle={{ fontSize:10, fontFamily:'normal-font', color:"#262731" }}
-                /> */}
                 <View style={{
                             flex:1,
                             height:125,

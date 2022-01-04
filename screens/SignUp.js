@@ -31,13 +31,6 @@ export default class SignUp extends React.Component{
             bugsAsked: 0,
             bugsFixed: 0,
             bugsScore: 100,
-            // newUser:{   username: '',  
-            //             email: '', 
-            //             bugs: [], 
-            //             bugsAsked: 0, 
-            //             bugsFixed: 0, 
-            //             bugsScore: 100
-            // },
         }
     }
 
