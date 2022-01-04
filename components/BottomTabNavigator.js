@@ -54,7 +54,7 @@ export default class BottomNavigator extends React.Component {
                                 icon="bell"
                                 color={'white'}
                                 size={25}
-                                onPress={() => console.log('Pressed')}
+                                onPress={() => this.props.navigation.navigate("Notifications")}
                                 style={{padding:0, margin:0}}
                             />
                             <Text style={{color:'white', fontFamily:'normal-font', fontWeight:"bold", fontSize:10}}>NOTIFICATIONS</Text>
