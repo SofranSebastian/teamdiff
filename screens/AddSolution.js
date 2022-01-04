@@ -4,7 +4,7 @@ import { IconButton, TextInput, Button, HelperText } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../db/firebaseDB';
-import { arrayUnion, doc, updateDoc, getDoc } from '@firebase/firestore';
+import { arrayUnion, doc, updateDoc, getDoc, collection, query, where, getDocs } from '@firebase/firestore';
 
 export default class AddSolution extends React.Component {
     constructor() {
@@ -61,6 +61,15 @@ export default class AddSolution extends React.Component {
     }
 
     postBug = async () => {
+
+        const q = query(collection(db, "users"), where("username", "==", this.props.route.params.creatorName));
+        const querySnapshot = await getDocs(q);
+        let id = "";
+        querySnapshot.forEach((doc) => {
+            id = doc.id
+        });
+
+
                     if (this.checkDescription(this.state.descriptionFromInput)) {
 
                         await this.getIDfromAsyncStorage();
@@ -79,9 +88,22 @@ export default class AddSolution extends React.Component {
                         const bugRef = doc(db, "bugs", this.props.route.params.bugID);
                         const bugSnap = await getDoc(bugRef)
 
+                        const notifRef = doc(db, "users", id)
+                        const notif = await getDoc(notifRef)
+
                         console.log(newSolution);
                         await updateDoc( bugRef, {
                             responsesThread: arrayUnion(newSolution)
+                        })
+
+                        let newNotification = {
+                            message: 'You have a new solution for the ' + this.props.route.params.screenTitle + ' bug.',
+                            timestamp: Date.now(),
+                            isRead: false
+                        }
+
+                        await updateDoc( notifRef, {
+                            notifications: arrayUnion(newNotification)
                         })
 
                         this.props.navigation.reset({

@@ -3,7 +3,7 @@ import { Text, View, Image } from 'react-native';
 import { Avatar, Card, IconButton } from 'react-native-paper';
 import { db } from "../db/firebaseDB";
 import { arrayUnion, doc, getDoc, arrayRemove } from "firebase/firestore";
-import { collection, query, where, getDocs, updateDoc, increment, } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, increment } from "firebase/firestore";
 
 async function getSolutionOwnerID(props){
     const q = query(collection(db, "users"), where("username", "==", props.ownerUsername));
@@ -55,7 +55,6 @@ async function markResolved(props){
     let userBugID = await getBugOwnerID(props);
     let bugID = props.bugID
 
-
     console.log(userSolutionID)
     console.log(bugID)
     console.log(props.timestamp)
@@ -70,6 +69,18 @@ async function markResolved(props){
     await updateDoc(bugRef, {
         isResolved:true
     });  
+
+
+    const notifRef = doc(db,'users',userSolutionID)
+    let newNotification = {
+        message: 'Your answer for bug ' + props.screenTitle + ' was marked as the best.',
+        timestamp: Date.now(),
+        isRead: false
+    }
+
+    await updateDoc( notifRef, {
+        notifications: arrayUnion(newNotification)
+    })
 
     props.navigation.reset({
         index: 0,

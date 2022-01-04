@@ -112,7 +112,7 @@ export default class BugDetail extends React.Component {
             bugDetail: this.props.route.params.bugDetail,
             bugPoints: this.props.route.params.bugPoints,
             bugID: this.state.bugID,
-            creatorName: this.props.route.params.creatorName,
+            creatorName: this.state.creator,
         })
     }
 
