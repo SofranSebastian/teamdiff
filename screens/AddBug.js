@@ -156,7 +156,6 @@ export default class AddBug extends React.Component {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
             this.setState({uploadProgress:progress})
-            console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
                 case 'paused':
                 console.log('Upload is paused');
@@ -190,7 +189,6 @@ export default class AddBug extends React.Component {
                             if (this.checkPoints(this.state.selectedPoints)) {
         
                                 await this.getIDfromAsyncStorage();
-                                console.log(this.userID);
         
                                 let newBug = {
                                     title: this.state.titleFromInput,
@@ -205,19 +203,7 @@ export default class AddBug extends React.Component {
                                     isResolved: false,
                                     imageURI: downloadBugURL
                                 };
-        
-                                // let date = new Date(newBug.createdAt);
-        
-                                // if (date.getTimezoneOffset() < 0) {
-                                //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                                // }
-                                // else {
-                                //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                                // }
-                                // console.log(date);
-                                
-        
-                                
+
                                 const userRef = doc(db, "users", this.userID);
                                 const userSnap = await getDoc(userRef);
         
@@ -272,18 +258,6 @@ export default class AddBug extends React.Component {
                                 isResolved: false,
                                 imageURI: ""
                             };
-    
-                            // let date = new Date(newBug.createdAt);
-    
-                            // if (date.getTimezoneOffset() < 0) {
-                            //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                            // }
-                            // else {
-                            //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                            // }
-                            // console.log(date);
-                            
-    
                             
                             const userRef = doc(db, "users", this.userID);
                             const userSnap = await getDoc(userRef);
