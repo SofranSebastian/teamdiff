@@ -1,28 +1,14 @@
 import React from "react";
-import { Text, View, ImageBackground, SafeAreaView, FlatList, ScrollView, StatusBar} from 'react-native';
-import { TextInput, Button, HelperText, IconButton } from 'react-native-paper';
+import { Text, View, SafeAreaView, FlatList } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import { bugsCol } from "../db/firebaseDB";
-import { doc, getDocs, onSnapshot, query, where, orderBy } from "firebase/firestore";
+import { getDocs, query, orderBy } from "firebase/firestore";
 import CardNews from "../components/CardNews";
 import CardBugs from "../components/CardBugs";
 import BottomTabNavigator from "../components/BottomTabNavigator";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-  ];
+
 const dummyData = require('../dummyDataNews.json')
 export default class Home extends React.Component {
     constructor() {
@@ -61,27 +47,10 @@ export default class Home extends React.Component {
         bugFromFirestore.id = bug.id;
         this.bugsFromFirestore.push(bugFromFirestore);
       });
-
-      // const q = query(bugsCol, where("isResolved", "==", false));
-      // const unsubscribe = onSnapshot(q, (snapshot) => {
-      //     snapshot.docChanges().forEach((change) => {
-      //       if (change.type === "added") {
-      //           console.log("New bug: ", change.doc.data());
-      //       }
-      //       if (change.type === "modified") {
-      //           console.log("Modified bug: ", change.doc.data());
-      //       }
-      //       if (change.type === "removed") {
-      //           var removeIndex = this.state.stateBugsArray.indexOf( change.doc.data().title )
-            
-      //       }
-        
-      //   });
-      // });
     }
 
     async componentDidMount(){
-        // fetch(  "https://current-news.p.rapidapi.com/news/technology", {
+        // await fetch(  "https://current-news.p.rapidapi.com/news/technology", {
         //         "method": "GET",
         //         "headers": {
         //             "x-rapidapi-host": "current-news.p.rapidapi.com",
@@ -98,7 +67,7 @@ export default class Home extends React.Component {
         //     .catch(err => {
         //         console.error(err);
         //     });
-        //this.data = dummyData.news;
+        // this.data = dummyData.news;
 
         // for( var i in dummyData.news.length){
         //     this.data.push( dummyData.news[i] );
@@ -161,24 +130,30 @@ export default class Home extends React.Component {
                       <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>☠️   BUGS TO BE KILLED</Text>
                     </View>
                     <View style={{flex:0.45}}>
-                      <FlatList   scrollEnabled={ true }
-
-                                  data={ this.state.stateBugsArray }
-                                  renderItem={ ({item}) => <CardBugs  title={ item.title }
-                                                                      cost={ item.cost }
-                                                                      description={ item.description }
-                                                                      navigation={ this.props.navigation }
-                                                                      category={ item.category }
-                                                                      needToSeeIfItIsResolved={ false }
-                                                                      isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
-                                                                      id = { item.id }
-                                                                      image = { item.imageURI}
-                                                          /> 
-                                          }
-                                  refreshing={this.state.refresh}
-                                  onRefresh={()=> this._onRefresh()}
-                                  keyExtractor={ item => item.id}
-                        />
+                        { this.state.stateBugsArray.length === 0 ? 
+                          <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:12, fontFamily:'normal-font', color:"gray" }}>
+                            No bugs yet.
+                          </Text>
+                        :
+                          null
+                        }
+                        <FlatList   scrollEnabled={ true }
+                                    data={ this.state.stateBugsArray }
+                                    renderItem={ ({item}) => <CardBugs  title={ item.title }
+                                                                        cost={ item.cost }
+                                                                        description={ item.description }
+                                                                        navigation={ this.props.navigation }
+                                                                        category={ item.category }
+                                                                        needToSeeIfItIsResolved={ false }
+                                                                        isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
+                                                                        id = { item.id }
+                                                                        image = { item.imageURI}
+                                                            /> 
+                                            }
+                                    refreshing={this.state.refresh}
+                                    onRefresh={()=> this._onRefresh()}
+                                    keyExtractor={ item => item.id}
+                          />
                       </View>
                     <BottomTabNavigator navigation={this.props.navigation}/>
                 </SafeAreaView> 
