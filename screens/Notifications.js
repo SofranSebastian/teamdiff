@@ -86,6 +86,13 @@ export default class Notifications extends React.Component{
                     </View>
                 </View>
                 <View style={{flex:0.9}}>
+                        {this.state.notificationsFromFirestore.length === 0 ?
+                                <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:12, fontFamily:'normal-font', color:"gray" }}>
+                                    No notifications yet.
+                                </Text>
+                            :
+                            null
+                        }
                         <FlatList   
                                   data={ this.state.notificationsFromFirestore }
                                   renderItem={ ({item}) => <CardNotification    timestamp={item.timestamp}
