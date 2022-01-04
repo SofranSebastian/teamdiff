@@ -143,7 +143,7 @@ export default class AddSolution extends React.Component {
                     mode="contained"
                     onPress = { this.postBug }
                     >
-                        POST BUG
+                        POST SOLUTION
                     </Button>
             </View>   
         )
