@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View, SafeAreaView, FlatList } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { bugsCol } from "../db/firebaseDB";
-import { getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../db/firebaseDB";
+import { bugsCol, usersCol } from "../db/firebaseDB";
+import { getDocs, query, orderBy, doc, getDoc, onSnapshot } from "firebase/firestore";
 import CardNews from "../components/CardNews";
 import CardBugs from "../components/CardBugs";
 import BottomTabNavigator from "../components/BottomTabNavigator";
@@ -22,6 +23,7 @@ export default class Home extends React.Component {
         this.state = {
           stateBugsArray: [],
           refresh: false,
+          newNotifications: false
         }
     }
 
@@ -46,6 +48,35 @@ export default class Home extends React.Component {
         var bugFromFirestore = bug.data();
         bugFromFirestore.id = bug.id;
         this.bugsFromFirestore.push(bugFromFirestore);
+      });
+    }
+
+    async getNotifications(){
+      await this.getIDfromAsyncStorage();
+
+      const userRef = doc(db, "users", this.userID);
+      const user = await getDoc(userRef);
+
+      if( user.exists() ){
+        for( let i = 0 ; i < user.data().notifications.length ; i++ ){
+          if( user.data().notifications[i].isRead === false ){
+            this.setState({
+              newNotifications:true
+            })
+          }
+        }
+      }
+
+      const unsub = onSnapshot(doc(db, "users", this.userID), (user) => {
+          if( user.exists() ){
+            for( let i = 0 ; i < user.data().notifications.length ; i++ ){
+              if( user.data().notifications[i].isRead === false ){
+                this.setState({
+                  newNotifications:true
+                })
+              }
+            }
+          }
       });
     }
 
@@ -74,6 +105,7 @@ export default class Home extends React.Component {
         // }
         // console.log(this.data);
     
+        await this.getNotifications();
         await this.getBugs();
         this.data = dummyData.news;
         this.setState({ stateBugsArray: this.bugsFromFirestore })
@@ -155,7 +187,7 @@ export default class Home extends React.Component {
                                     keyExtractor={ item => item.id}
                           />
                       </View>
-                    <BottomTabNavigator navigation={this.props.navigation}/>
+                    <BottomTabNavigator navigation={this.props.navigation} newNotifications={this.state.newNotifications}/>
                 </SafeAreaView> 
         )   
     }
