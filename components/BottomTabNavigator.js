@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { FAB, IconButton } from 'react-native-paper';
+import { FAB, IconButton, Badge } from 'react-native-paper';
 
 export default class BottomNavigator extends React.Component {
 
@@ -50,6 +50,12 @@ export default class BottomNavigator extends React.Component {
                             <Text style={{color:'white', fontFamily:'normal-font', fontSize:10, fontWeight:"bold"}}>PROFILE</Text>
                         </View>
                         <View style={{marginRight:"12%", height: 60, justifyContent:'center', alignItems:'center'}}>
+                            { this.props.newNotifications === true ?
+                                <Badge style={{position:'absolute', top:5,right:'25%', backgroundColor:"white"}} size={14}>
+                                </Badge>
+                              :
+                                null
+                            }
                             <IconButton
                                 icon="bell"
                                 color={'white'}
