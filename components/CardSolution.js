@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { TouchableOpacity,  Linking, Text, View, Image } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph, IconButton } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { db, usersCol } from "../db/firebaseDB";
+import { Text, View, Image } from 'react-native';
+import { Avatar, Card, IconButton } from 'react-native-paper';
+import { db } from "../db/firebaseDB";
 import { arrayUnion, doc, getDoc, arrayRemove } from "firebase/firestore";
 import { collection, query, where, getDocs, updateDoc, increment, } from "firebase/firestore";
 

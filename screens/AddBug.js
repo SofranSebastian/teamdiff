@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip, Avatar} from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
-import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
-import * as FileSystem from 'expo-file-system';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import * as Progress from 'react-native-progress';
 export default class AddBug extends React.Component {
     constructor() {
@@ -258,7 +257,7 @@ export default class AddBug extends React.Component {
                                 isResolved: false,
                                 imageURI: ""
                             };
-                            
+
                             const userRef = doc(db, "users", this.userID);
                             const userSnap = await getDoc(userRef);
     

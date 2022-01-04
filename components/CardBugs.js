@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TouchableOpacity,  Linking, Text, View, Image } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Text, View, Image } from 'react-native';
+import { Button, Card } from 'react-native-paper';
 
 function returnImageUrl( category ){
     if( category === "JavaScript" ){

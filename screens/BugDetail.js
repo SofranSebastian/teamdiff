@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { Button, IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
 import { db } from "../db/firebaseDB";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";

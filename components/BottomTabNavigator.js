@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { Icon} from 'react-native-elements';
-import { FAB, Button, IconButton } from 'react-native-paper';
+import React from 'react';
+import { View, Text } from 'react-native';
+import { FAB, IconButton } from 'react-native-paper';
 
 export default class BottomNavigator extends React.Component {
 

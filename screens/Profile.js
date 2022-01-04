@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ImageBackground, FlatList } from 'react-native';
 import { IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
-import { usersCol, bugsCol, db } from "../db/firebaseDB";
+import { bugsCol, db } from "../db/firebaseDB";
 import {  where, getDocs, query, doc, getDoc, onSnapshot, orderBy } from "@firebase/firestore";
 import CardBugs from '../components/CardBugs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
