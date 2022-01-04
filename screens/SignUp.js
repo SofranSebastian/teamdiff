@@ -135,9 +135,6 @@ export default class SignUp extends React.Component{
                 }
             }
         }
-        // const userSnapshot = await getDocs(usersCol);
-        // const userList = userSnapshot.docs.map(user => user.data());
-        //console.log(userList);
     }
 
     _goToLoginScreen = () => {
