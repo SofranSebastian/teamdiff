@@ -3,7 +3,7 @@ import { Text, View, ImageBackground, } from 'react-native';
 import { TextInput, Button, HelperText } from 'react-native-paper';
 import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth';
 import { usersCol } from "../db/firebaseDB";
-import { getFirestore, collection, getDocs, addDoc, doc, query, where, updateDoc, arrayUnion } from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 
 const background_image_source = require('../images/signup-background.png');
 
@@ -31,13 +31,6 @@ export default class SignUp extends React.Component{
             bugsAsked: 0,
             bugsFixed: 0,
             bugsScore: 100,
-            // newUser:{   username: '',  
-            //             email: '', 
-            //             bugs: [], 
-            //             bugsAsked: 0, 
-            //             bugsFixed: 0, 
-            //             bugsScore: 100
-            // },
         }
     }
 

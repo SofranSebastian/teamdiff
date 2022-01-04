@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip, Avatar} from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
-import { getStorage, ref, uploadBytes, uploadString, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
-import * as FileSystem from 'expo-file-system';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import * as Progress from 'react-native-progress';
 export default class AddBug extends React.Component {
     constructor() {
@@ -156,7 +155,6 @@ export default class AddBug extends React.Component {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
             this.setState({uploadProgress:progress})
-            console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
                 case 'paused':
                 console.log('Upload is paused');
@@ -190,7 +188,6 @@ export default class AddBug extends React.Component {
                             if (this.checkPoints(this.state.selectedPoints)) {
         
                                 await this.getIDfromAsyncStorage();
-                                console.log(this.userID);
         
                                 let newBug = {
                                     title: this.state.titleFromInput,
@@ -205,19 +202,7 @@ export default class AddBug extends React.Component {
                                     isResolved: false,
                                     imageURI: downloadBugURL
                                 };
-        
-                                // let date = new Date(newBug.createdAt);
-        
-                                // if (date.getTimezoneOffset() < 0) {
-                                //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                                // }
-                                // else {
-                                //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                                // }
-                                // console.log(date);
-                                
-        
-                                
+
                                 const userRef = doc(db, "users", this.userID);
                                 const userSnap = await getDoc(userRef);
         
@@ -272,19 +257,7 @@ export default class AddBug extends React.Component {
                                 isResolved: false,
                                 imageURI: ""
                             };
-    
-                            // let date = new Date(newBug.createdAt);
-    
-                            // if (date.getTimezoneOffset() < 0) {
-                            //     date.setHours(date.getHours() + Math.abs(date.getTimezoneOffset() / 60));
-                            // }
-                            // else {
-                            //     date.setHours(date.getHours() - Math.abs(date.getTimezoneOffset() / 60));
-                            // }
-                            // console.log(date);
-                            
-    
-                            
+
                             const userRef = doc(db, "users", this.userID);
                             const userSnap = await getDoc(userRef);
     

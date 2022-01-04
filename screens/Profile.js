@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ImageBackground, FlatList } from 'react-native';
 import { IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
-import { usersCol, bugsCol, db } from "../db/firebaseDB";
+import { bugsCol, db } from "../db/firebaseDB";
 import {  where, getDocs, query, doc, getDoc, onSnapshot, orderBy } from "@firebase/firestore";
 import CardBugs from '../components/CardBugs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,7 +18,8 @@ export default class Profile extends React.Component{
             bugsKilled: 0,
             bugsScore: 0,
             bugsReported: 0,
-            shouldWaitForStats: true
+            shouldWaitForStats: true,
+            refresh: false,
         }
     }
 
@@ -39,7 +40,7 @@ export default class Profile extends React.Component{
         const userID = this.userID;
         const q = query(bugsCol, where("ownerID", "==", userID), orderBy("createdAt","desc"))
         const querySnapshot = await getDocs(q);
-
+        this.bugsFromFirestore = [];
         if (!querySnapshot.empty) {
             querySnapshot.forEach(bug => {
                 var bugFromFirestore = bug.data();
@@ -73,13 +74,19 @@ export default class Profile extends React.Component{
         });
     }
 
-    async componentDidMount(){
-        
+    async componentDidMount(){    
         await this.getMyBugs()
         this.setState({ stateBugsArray: this.bugsFromFirestore })
         await this.getMyStats()
         this.setState({ shouldWaitForStats: false})
     }
+
+    async _onRefresh(){
+        this.setState({refresh: true});
+        await this.getMyBugs();
+        this.setState({ stateBugsArray: this.bugsFromFirestore });
+        this.setState({refresh:false});
+      }
 
     render(){
         return(
@@ -141,21 +148,30 @@ export default class Profile extends React.Component{
                     <View style={{backgroundColor:"#262731", marginLeft:5, marginTop:15, marginBottom:5, alignSelf:'flex-start', borderRadius:20}}>
                       <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>⭕  YOUR BUGS</Text>
                     </View>
+                    { this.state.stateBugsArray.length === 0 ? 
+                        <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:12, fontFamily:'normal-font', color:"gray" }}>
+                        No bugs yet.
+                        </Text>
+                    :
+                        null
+                    }
                     <FlatList   scrollEnabled={ true }
-                                data={ this.state.stateBugsArray }
-                                renderItem={ ({item}) => <CardBugs  title={ item.title }
-                                                                    cost={ item.cost }
-                                                                    description={ item.description }
-                                                                    navigation={ this.props.navigation }
-                                                                    category={ item.category }
-                                                                    needToSeeIfItIsResolved={ true }
-                                                                    isResolved = { item.isResolved }
-                                                                    id = { item.bugID }
-                                                                    creator = { item.ownerUsername }
-                                                                    image = { item.imageURI }
-                                                          /> 
-                                }
-                                keyExtractor={ item => item.title}
+                                    data={ this.state.stateBugsArray }
+                                    renderItem={ ({item}) => <CardBugs  title={ item.title }
+                                                                        cost={ item.cost }
+                                                                        description={ item.description }
+                                                                        navigation={ this.props.navigation }
+                                                                        category={ item.category }
+                                                                        needToSeeIfItIsResolved={ true }
+                                                                        isResolved = { item.isResolved }
+                                                                        id = { item.bugID }
+                                                                        creator = { item.ownerUsername }
+                                                                        image = { item.imageURI }
+                                                            /> 
+                                    }
+                                    refreshing={this.state.refresh}
+                                    onRefresh={()=> this._onRefresh()}
+                                    keyExtractor={ item => item.title}
                     />
                 </View>
             </View>

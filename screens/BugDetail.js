@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
-import { Button, IconButton, Avatar } from 'react-native-paper';
+import { Button, IconButton, Avatar, ActivityIndicator } from 'react-native-paper';
 import { db } from "../db/firebaseDB";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import CardSolution from "../components/CardSolution";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +21,9 @@ export default class BugDetail extends React.Component {
             timestamp: new Date(),
             bugID: "",
             isAbleToDecide: false,
-            isResolved: false
+            isResolved: false,
+            refresh: false,
+            imageLoading: true
         }  
 
     }
@@ -44,7 +46,6 @@ export default class BugDetail extends React.Component {
     }
 
     async getResponses(){
-        console.log(this.props.route.params.id)
         const bugRef = doc(db, "bugs", this.props.route.params.id);
         const bug = await getDoc(bugRef);
         
@@ -65,20 +66,41 @@ export default class BugDetail extends React.Component {
                     if(a.createdAt < b.createdAt) return -1;
                     return 0;
                 });
-                console.log('asdasd')
             }
             this.setState({ responsesFromFirestore: tempArray})
         } else {
           console.log("No such document!");
         }
+
+        const unsub = onSnapshot(doc(db, "bugs", this.props.route.params.id), (bug) => {
+            if (bug.exists()) {
+                var tempArray = [];
+                this.setState({
+                    creator:bug.data().ownerUsername,
+                    timestamp: new Date(bug.data().createdAt),
+                    bugID: this.props.route.params.id,
+                    isResolved: bug.data().isResolved
+                })
+    
+                for( let i = 0 ; i < bug.data().responsesThread.length ; i++ ){
+                    var objectResponse = bug.data().responsesThread[i]
+                    tempArray.push(objectResponse);
+                    tempArray.sort( function( a , b){
+                        if(a.createdAt > b.createdAt) return 1;
+                        if(a.createdAt < b.createdAt) return -1;
+                        return 0;
+                    });
+                }
+                this.setState({ responsesFromFirestore: tempArray})
+            } else {
+              console.log("No such document!");
+            }
+        });
     }
 
     async componentDidMount(){
-        console.log('asdasd1')
         await this.getIDfromAsyncStorage();
-        console.log('asdasd2')
         await this.getResponses();
-        console.log('asdasd3')
         if( this.state.creator === this.state.loggedUser ){
             this.setState({isAbleToDecide: true})
         }
@@ -212,7 +234,27 @@ export default class BugDetail extends React.Component {
                                                             marginLeft:5
                                                         }}
                             >
-                                <Image source={{uri:this.props.route.params.image}} style={{width:'90%', height:250}}/>
+                            {this.props.route.params.image ?
+                                <View>
+                                    { this.state.imageLoading === true ?
+                                        <ActivityIndicator
+                                            animating={this.state.imageLoading}
+                                            style={{marginBottom:'5%'}}
+                                            color={"#262731"}
+                                        />
+                                        :
+                                        null
+                                    }
+                                    <Image  source={{uri:this.props.route.params.image}} 
+                                            style={{width:'90%', height:250}}
+                                            onLoadEnd={()=> this.setState({imageLoading:false})}
+                                    />
+                                </View>
+                                :
+                                <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:12, fontFamily:'normal-font', color:"gray" }}>
+                                    No image uploaded.
+                                </Text>
+                            }
                             </ReactNativeZoomableView>
 
                         </View>
@@ -220,6 +262,7 @@ export default class BugDetail extends React.Component {
                     <SafeAreaView>
                         <View style={{ alignItems:'center', width:'100%'}}>
                             { this.state.creator === this.state.loggedUser ?
+                             
                                 <View style={{width:"100%", alignItems:'center', marginTop:'5%'}}>
                                     {   this.state.isResolved === true ?
                                              <View style={{alignItems:'center', justifyContent:'center', height:50}}>
@@ -267,7 +310,6 @@ export default class BugDetail extends React.Component {
                             }
                         </View>
                         <ScrollView>
-
                                     { this.state.responsesFromFirestore.map( (item) => 
                                         <CardSolution   key={ item.description }
                                                         ownerUsername={ item.ownerUsername }

@@ -1,18 +1,8 @@
-
-
-
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions,  ImageBackground  } from 'react-native';
-import { IconButton, TextInput, Button, HelperText, Chip, } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { bugsCol, db } from '../db/firebaseDB';
-import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
+import { View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import { Camera } from 'expo-camera';
 import { ImageManipulator } from 'expo-image-crop'
-import ImgToBase64 from 'react-native-image-base64';
-
-
 export default class CameraScreen extends React.Component {
     constructor() {
         super();

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TouchableOpacity,  Linking, Text } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Avatar, Card } from 'react-native-paper';
 
 function CardNews(props){
     return(
