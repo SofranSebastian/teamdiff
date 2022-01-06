@@ -69,7 +69,6 @@ export default class BugDetail extends React.Component {
             }
             this.setState({ responsesFromFirestore: tempArray})
         } else {
-          console.log("No such document!");
         }
 
         const unsub = onSnapshot(doc(db, "bugs", this.props.route.params.id), (bug) => {

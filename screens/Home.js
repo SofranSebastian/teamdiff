@@ -18,7 +18,6 @@ export default class Home extends React.Component {
         this.bugsFromFirestore = [];
         this.data = dummyData.news;
         this.userID = "";
-        //console.log(this.data);
 
         this.state = {
           stateBugsArray: [],
@@ -92,7 +91,6 @@ export default class Home extends React.Component {
         //         (response) => response.json()
         //     ).then( (responseData) => {
         //             this.data = responseData.news
-        //             console.log(this.data)
         //         }
         //     )
         //     .catch(err => {

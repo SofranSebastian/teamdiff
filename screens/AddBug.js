@@ -60,18 +60,15 @@ export default class AddBug extends React.Component {
         if (title.length === 0) {
             this.titleErrorMessage = "Please input the title.";
             this.setState({errorFromTitleInput: true});
-            console.log("The title is empty!");
             return false;
         }
         else if (title.length > 25) {
             this.titleErrorMessage = "The title is too long (max. 25 characters).";
             this.setState({errorFromTitleInput: true});
-            console.log("The title is too long.");
             return false;
         }
         else if (title.length <= 25) {
             this.setState({errorFromTitleInput: false});
-            console.log("The title is fine.");
             return true;
         }
     }
@@ -95,12 +92,10 @@ export default class AddBug extends React.Component {
         else if (description.length > 250) {
             this.setState({errorFromDescriptionInput: true});
             this.descriptionErrorMessage = "The description is too long (max. 250 characters).";
-            console.log("The description is too long.");
             return false;
         }
         else if (description.length <= 250) {
             this.setState({errorFromDescriptionInput: false});
-            console.log("The description is fine.");
             return true;
         }
     }
@@ -119,122 +114,101 @@ export default class AddBug extends React.Component {
 
     }
 
-    dataURLtoFile(dataurl, filename) {
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-            while(n--){
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, {type:mime});
-        }
-
-        urlToObject= async(location)=> {
-            const response = await fetch(location);
-            // here image is url/location of image
-            const blob = await response.blob();
-            const file = new File([blob], 'image.jpg', {type: blob.type});
-            console.log(file);
-          }
-
     postBug = async () => {
 
         if( this.props.route.params.image.uri !== null){
             let downloadBugURL = ''
             let blob = await fetch(this.props.route.params.image.uri).then(r => r.blob());
-            console.log(blob)
-            let metadata = {
-            type: 'image/jpeg'
-            };
+            let metadata = { type: 'image/jpeg' };
             let file = new File([blob], "test.jpg", metadata);
-            console.log(file)
+
             const storage = getStorage();
             const bugRef = ref(storage, 'images/' + new Date().toISOString());
             const uploadTask = uploadBytesResumable(bugRef, file, metadata);
-            uploadTask.on('state_changed',
-            (snapshot) => {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
-            this.setState({uploadProgress:progress})
-            switch (snapshot.state) {
-                case 'paused':
-                console.log('Upload is paused');
-                break;
-                case 'running':
-                console.log('Upload is running');
-                break;
-            }
-            }, 
-            (error) => {
-            switch (error.code) {
-                case 'storage/unauthorized':
-                // User doesn't have permission to access the object
-                break;
-                case 'storage/canceled':
-                // User canceled the upload
-                break;
-                case 'storage/unknown':
-                // Unknown error occurred, inspect error.serverResponse
-                break;
-            }
-            }, 
-            () => {
-            // Upload completed successfully, now we can get the download URL
-            getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
-                console.log('File available at', downloadURL);
-                downloadBugURL = downloadURL;
-                if (this.checkTitle(this.state.titleFromInput)) {
-                    if (this.checkCategory(this.state.selectedCategory)) {
-                        if (this.checkDescription(this.state.descriptionFromInput)) {
-                            if (this.checkPoints(this.state.selectedPoints)) {
-        
-                                await this.getIDfromAsyncStorage();
-        
-                                let newBug = {
-                                    title: this.state.titleFromInput,
-                                    category: this.state.selectedCategory,
-                                    description: this.state.descriptionFromInput,
-                                    cost: Number(this.state.selectedPoints),
-                                    helpers: Array(),
-                                    responsesThread: Array(),
-                                    createdAt: Date.now(),
-                                    ownerID: this.userID,
-                                    ownerUsername: this.userName,
-                                    isResolved: false,
-                                    imageURI: downloadBugURL
-                                };
 
-                                const userRef = doc(db, "users", this.userID);
-                                const userSnap = await getDoc(userRef);
-        
-                                let userPoints = userSnap.data().bugsScore;
-        
-                                if (userPoints >= this.state.selectedPoints) {
-                                    
-                                    const bugRef = await addDoc(bugsCol, newBug);
-                                    
-                                    await updateDoc(userRef, {
-                                        bugsScore: increment(-Number(this.state.selectedPoints)),
-                                        bugsAsked: increment(1),
-                                        bugs: arrayUnion(bugRef.id)
-                                    });
-            
-        
-                                    this.props.navigation.reset({
-                                        index: 0,
-                                        routes: [{ name: 'Home' }]
-                                });
-                                }
-                                else {
-                                    this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
-                                    this.setState({errorFromPointsInput: true});
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            }
-        );
+            uploadTask.on(  'state_changed',
+                            (snapshot) => {
+                                            let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+                                            this.setState({uploadProgress:progress})
+                                            switch (snapshot.state) {
+                                                case 'paused':
+                                                    console.log('Upload is paused');
+                                                    break;
+                                                case 'running':
+                                                    console.log('Upload is running');
+                                                    break;
+                                            }
+                                        }, 
+                            (error) => {
+                                            switch (error.code) {
+                                                case 'storage/unauthorized':
+                                                    // User doesn't have permission to access the object
+                                                    break;
+                                                case 'storage/canceled':
+                                                    // User canceled the upload
+                                                    break;
+                                                case 'storage/unknown':
+                                                    // Unknown error occurred, inspect error.serverResponse
+                                                    break;
+                                            }
+                                        }, 
+                            () => {
+                                    // Upload completed successfully, now we can get the download URL
+                                            getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
+                                                downloadBugURL = downloadURL;
+                                                if (this.checkTitle(this.state.titleFromInput)) {
+                                                    if (this.checkCategory(this.state.selectedCategory)) {
+                                                        if (this.checkDescription(this.state.descriptionFromInput)) {
+                                                            if (this.checkPoints(this.state.selectedPoints)) {
+                                        
+                                                                await this.getIDfromAsyncStorage();
+                                        
+                                                                let newBug = {
+                                                                    title: this.state.titleFromInput,
+                                                                    category: this.state.selectedCategory,
+                                                                    description: this.state.descriptionFromInput,
+                                                                    cost: Number(this.state.selectedPoints),
+                                                                    helpers: Array(),
+                                                                    responsesThread: Array(),
+                                                                    createdAt: Date.now(),
+                                                                    ownerID: this.userID,
+                                                                    ownerUsername: this.userName,
+                                                                    isResolved: false,
+                                                                    imageURI: downloadBugURL
+                                                                };
+
+                                                                const userRef = doc(db, "users", this.userID);
+                                                                const userSnap = await getDoc(userRef);
+                                        
+                                                                let userPoints = userSnap.data().bugsScore;
+                                        
+                                                                if (userPoints >= this.state.selectedPoints) {
+                                                                    
+                                                                    const bugRef = await addDoc(bugsCol, newBug);
+                                                                    
+                                                                    await updateDoc(userRef, {
+                                                                        bugsScore: increment(-Number(this.state.selectedPoints)),
+                                                                        bugsAsked: increment(1),
+                                                                        bugs: arrayUnion(bugRef.id)
+                                                                    });
+                                            
+                                        
+                                                                    this.props.navigation.reset({
+                                                                        index: 0,
+                                                                        routes: [{ name: 'Home' }]
+                                                                });
+                                                                }
+                                                                else {
+                                                                    this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                                                                    this.setState({errorFromPointsInput: true});
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                            }
+                                        );
         }else{
             if (this.checkTitle(this.state.titleFromInput)) {
                 if (this.checkCategory(this.state.selectedCategory)) {
@@ -242,7 +216,6 @@ export default class AddBug extends React.Component {
                         if (this.checkPoints(this.state.selectedPoints)) {
     
                             await this.getIDfromAsyncStorage();
-                            console.log(this.userID);
     
                             let newBug = {
                                 title: this.state.titleFromInput,
@@ -288,8 +261,6 @@ export default class AddBug extends React.Component {
                 }
             }
         }
-
-        
     }
 
     render() {
@@ -334,7 +305,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "JavaScript",
                                         selectedCategoryColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("JavaScript")
                                 )
                                 }
                                 selectedColor={this.state.selectedCategoryColor[0]}>
@@ -348,7 +318,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "Java", 
                                         selectedCategoryColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("Java")
                                 )}
                                 selectedColor={this.state.selectedCategoryColor[1]}>
                                 Java
@@ -361,7 +330,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "C", 
                                         selectedCategoryColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("C")
                                 )}
                                 selectedColor={this.state.selectedCategoryColor[2]}>
                                 C
@@ -374,7 +342,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "Python", 
                                         selectedCategoryColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
                                     },
-                                    console.log("Python")
                                 )}
                                 selectedColor={this.state.selectedCategoryColor[3]}>
                                 Python
@@ -387,7 +354,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "Scala", 
                                         selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
                                     },
-                                    console.log("Scala")
                                 )}
                                 selectedColor={this.state.selectedCategoryColor[4]}>
                                 Scala
@@ -400,7 +366,6 @@ export default class AddBug extends React.Component {
                                         selectedCategory: "C++", 
                                         selectedCategoryColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
                                     },
-                                    console.log("C++")
                                 )}
                                 selectedColor={this.state.selectedCategoryColor[5]}>
                                 C++
@@ -435,7 +400,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "5",
                                         selectedPointsColor: ["white", "#262731", "#262731", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("5")
                                 )
                                 }
                                 selectedColor={this.state.selectedPointsColor[0]}>
@@ -449,7 +413,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "20", 
                                         selectedPointsColor: ["#262731", "white", "#262731", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("20")
                                 )}
                                 selectedColor={this.state.selectedPointsColor[1]}>
                                 20
@@ -462,7 +425,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "40", 
                                         selectedPointsColor: ["#262731", "#262731", "white", "#262731", "#262731", "#262731"]
                                     },
-                                    console.log("40")
                                 )}
                                 selectedColor={this.state.selectedPointsColor[2]}>
                                 40
@@ -475,7 +437,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "60", 
                                         selectedPointsColor: ["#262731", "#262731", "#262731",  "white", "#262731", "#262731"]
                                     },
-                                    console.log("60")
                                 )}
                                 selectedColor={this.state.selectedPointsColor[3]}>
                                 60
@@ -488,7 +449,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "80", 
                                         selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "white", "#262731"]
                                     },
-                                    console.log("80")
                                 )}
                                 selectedColor={this.state.selectedPointsColor[4]}>
                                 80
@@ -501,7 +461,6 @@ export default class AddBug extends React.Component {
                                         selectedPoints: "100", 
                                         selectedPointsColor: ["#262731", "#262731", "#262731", "#262731", "#262731", "white"]
                                     },
-                                    console.log("100")
                                 )}
                                 selectedColor={this.state.selectedPointsColor[5]}>
                                 100

@@ -50,12 +50,10 @@ export default class AddSolution extends React.Component {
         else if (description.length > 500) {
             this.setState({errorFromDescriptionInput: true});
             this.descriptionErrorMessage = "The description is too long (max. 500 characters).";
-            console.log("The description is too long.");
             return false;
         }
         else if (description.length <= 500) {
             this.setState({errorFromDescriptionInput: false});
-            console.log("The description is fine.");
             return true;
         }
     }
@@ -91,7 +89,6 @@ export default class AddSolution extends React.Component {
                         const notifRef = doc(db, "users", id)
                         const notif = await getDoc(notifRef)
 
-                        console.log(newSolution);
                         await updateDoc( bugRef, {
                             responsesThread: arrayUnion(newSolution)
                         })
