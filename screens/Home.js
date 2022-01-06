@@ -16,9 +16,8 @@ export default class Home extends React.Component {
         super();
     
         this.bugsFromFirestore = [];
-        this.data = dummyData.news;
+        this.data = [];
         this.userID = "";
-        //console.log(this.data);
 
         this.state = {
           stateBugsArray: [],
@@ -81,24 +80,23 @@ export default class Home extends React.Component {
     }
 
     async componentDidMount(){
-        // await fetch(  "https://current-news.p.rapidapi.com/news/technology", {
-        //         "method": "GET",
-        //         "headers": {
-        //             "x-rapidapi-host": "current-news.p.rapidapi.com",
-        //             "x-rapidapi-key": "baf44d4290msh54dc398cb97add8p194c17jsn9aab1e258a32"
-        //         }
-        //     })
-        //     .then( 
-        //         (response) => response.json()
-        //     ).then( (responseData) => {
-        //             this.data = responseData.news
-        //             console.log(this.data)
-        //         }
-        //     )
-        //     .catch(err => {
-        //         console.error(err);
-        //     });
-        // this.data = dummyData.news;
+        await fetch(  "https://current-news.p.rapidapi.com/news/technology", {
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-host": "current-news.p.rapidapi.com",
+                    "x-rapidapi-key": "baf44d4290msh54dc398cb97add8p194c17jsn9aab1e258a32"
+                }
+            })
+            .then( 
+                (response) => response.json()
+            ).then( (responseData) => {
+                    this.data = responseData.news
+                }
+            )
+            .catch(err => {
+                console.error(err);
+            });
+        //this.data = dummyData.news;
 
         // for( var i in dummyData.news.length){
         //     this.data.push( dummyData.news[i] );
@@ -107,7 +105,7 @@ export default class Home extends React.Component {
     
         await this.getNotifications();
         await this.getBugs();
-        this.data = dummyData.news;
+        //this.data = dummyData.news;
         this.setState({ stateBugsArray: this.bugsFromFirestore })
     }
 

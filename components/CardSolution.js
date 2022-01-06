@@ -55,9 +55,6 @@ async function markResolved(props){
     let userBugID = await getBugOwnerID(props);
     let bugID = props.bugID
 
-    console.log(userSolutionID)
-    console.log(bugID)
-    console.log(props.timestamp)
     await getResponse(props)
     const userRef = doc(db, "users", userSolutionID);
     await updateDoc(userRef, {

@@ -64,9 +64,7 @@ class LogIn extends Component {
             await signInWithEmailAndPassword(auth, this.state.emailFromDB, this.state.passwordFromInput)
                 .then(userCredential => {
                     this.setState({errorFromPasswordInput: false});
-                    console.log(`Welcome, ${this.state.usernameFromInput}!`);
                     const user = userCredential.user;
-                    console.log(user.uid);
                 })
                 .then( () => {
                             try {
