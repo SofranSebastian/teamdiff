@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { IconButton, TextInput, Button, HelperText, Chip, Avatar} from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bugsCol, db } from '../db/firebaseDB';
 import { addDoc, arrayUnion, doc, increment, updateDoc, getDoc } from '@firebase/firestore';
 import { Camera } from 'expo-camera';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, uploadBytes  } from "firebase/storage";
 import * as Progress from 'react-native-progress';
+
+import * as ImagePicker from 'expo-image-picker';
+
 export default class AddBug extends React.Component {
     constructor() {
         super();
@@ -34,7 +37,10 @@ export default class AddBug extends React.Component {
             errorFromPointsInput: false,
             cameraType: Camera.Constants.Type.back,
             isCameraOn: false,
-            uploadProgress: 0
+            uploadProgress: 0,
+            imageURI: null,
+            isImagePicked: false,
+            imageName: null
         };
     }
 
@@ -110,13 +116,104 @@ export default class AddBug extends React.Component {
         return true;
     }
 
+    pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            this.setState({isImagePicked: true});
+            this.setState({imageURI: result.uri});
+
+            let tokens = this.state.imageURI.split("/");
+            
+            // get the image name only (<random-text>.jpg)
+            this.setState({imageName: tokens[tokens.length-1]});
+            console.log(this.state.imageName);
+        }
+    }
+
     componentDidMount(){
 
     }
 
     postBug = async () => {
 
-        if( this.props.route.params.image.uri !== null){
+        if (this.state.isImagePicked) {
+            if (this.checkTitle(this.state.titleFromInput)) {
+                if (this.checkCategory(this.state.selectedCategory)) {
+                    if (this.checkDescription(this.state.descriptionFromInput)) {
+                        if (this.checkPoints(this.state.selectedPoints)) {
+
+                            await this.getIDfromAsyncStorage();
+                            console.log(this.userID);
+
+                            let newBug = {
+                                title: this.state.titleFromInput,
+                                category: this.state.selectedCategory,
+                                description: this.state.descriptionFromInput,
+                                cost: Number(this.state.selectedPoints),
+                                helpers: Array(),
+                                responsesThread: Array(),
+                                createdAt: Date.now(),
+                                ownerID: this.userID,
+                                ownerUsername: this.userName,
+                                isResolved: false,
+                                imageURI: null
+                            };
+
+                            const response = await fetch(this.state.imageURI);
+                            const blob = await response.blob();
+
+                            const storage = getStorage();
+                            const storageRef = ref(storage, `images/${this.state.imageName}`);
+
+                            uploadBytes(storageRef, blob).then((snapshot) => {
+                                console.log('Uploaded a blob or file!');
+
+                                getDownloadURL(storageRef).then(async (url) => {
+                                    console.log(`The URL for ${this.state.imageName} is ${url}`);
+                                    newBug.imageURI = url;
+
+                                    console.log(newBug);
+
+                                    const userRef = doc(db, "users", this.userID);
+                                    const userSnap = await getDoc(userRef);
+ 
+                                    let userPoints = userSnap.data().bugsScore;
+ 
+                                    if (userPoints >= this.state.selectedPoints) {
+                            
+                                        const bugRef = await addDoc(bugsCol, newBug);
+                            
+                                        await updateDoc(userRef, {
+                                            bugsScore: increment(-Number(this.state.selectedPoints)),
+                                            bugsAsked: increment(1),
+                                            bugs: arrayUnion(bugRef.id)
+                                        });
+    
+                                        this.props.navigation.reset({
+                                            index: 0,
+                                            routes: [{ name: 'Home' }]
+                                        });
+                                    }
+                                    else {
+                                        this.pointsErrorMessage = `Too much. Your available bug points: ${userPoints}`;
+                                        this.setState({errorFromPointsInput: true});
+                                    }
+                                });
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        else if( this.props.route.params.image.uri !== null){
             let downloadBugURL = ''
             let blob = await fetch(this.props.route.params.image.uri).then(r => r.blob());
             let metadata = { type: 'image/jpeg' };
@@ -469,10 +566,21 @@ export default class AddBug extends React.Component {
                         <HelperText  type="error" visible={ this.state.errorFromPointsInput } style={{width:'90%'}}>
                             { this.pointsErrorMessage }
                         </HelperText>
+                        <Text style={ {fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: "#262731"} }>
+                            IMAGE
+                        </Text>
+                        <Button
+                            style={ {backgroundColor: "#F5F5F5", marginBottom:"5%", width:"40%"} }
+                            theme={ {roundness: 20} }
+                            mode="outlined"
+                            color="black"
+                            disabled={this.props.route.params.image.uri !== null}
+                            onPress = { this.pickImage }>CHOOSE</Button>
+                            {this.state.imageURI && <Image source={{ uri: this.state.imageURI }} style={ this.state.isImagePicked ? { width: "100%", height: 200 } : {}} />}
                     </View>
                 </KeyboardAwareScrollView>
                         <Button 
-                        style={ {backgroundColor: "#262731", marginBottom:"2%", width:"55%", height: 40, alignSelf: 'center'} }
+                        style={ {backgroundColor: "#262731", marginBottom:"2%", marginTop: "2%", width:"55%", height: 40, alignSelf: 'center'} }
                         theme={ {roundness: 20} }
                         mode="contained"
                         onPress = { this.postBug }
@@ -480,9 +588,14 @@ export default class AddBug extends React.Component {
                                     POST BUG
                         </Button>
                         <Button 
-                        style={ {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"55%", height: 40, alignSelf: 'center'} }
+                        style={ this.state.isImagePicked ? 
+                                {backgroundColor: "#F5F5F5", marginTop: "2%", marginBottom:"4%", width:"55%", height: 40, alignSelf: 'center'} 
+                                : 
+                                {backgroundColor: "#262731", marginTop: "2%", marginBottom:"4%", width:"55%", height: 40, alignSelf: 'center'} 
+                            }
                         theme={ {roundness: 20} }
                         mode="contained"
+                        disabled={this.state.isImagePicked}
                         onPress = { async () => {  
                                             const {status} = await Camera.requestPermissionsAsync()
                                             if(status === 'granted'){
