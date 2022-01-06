@@ -107,17 +107,16 @@ export default class SignUp extends React.Component{
                         username: this.state.usernameFromInput,
                         email: this.state.emailFromInput,
                         bugs: this.state.bugs,
-                        bugsAsekd: this.state.bugsAsked,
+                        bugsAsked: this.state.bugsAsked,
                         bugsFixed: this.state.bugsFixed,
                         bugsScore: this.state.bugsScore,
+                        notifications: Array()
                     }
                     
                     const auth = getAuth();
 
-                    console.log(this.state.emailFromInput, this.state.passwordFromInput);
                     await createUserWithEmailAndPassword(auth, this.state.emailFromInput, this.state.passwordFromInput)
                         .then(() => {
-                            console.log("User added to Auth successfully.");
                             let userRef = addDoc(usersCol, newUser );
                     
                             if (userRef) {
