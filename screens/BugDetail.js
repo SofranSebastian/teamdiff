@@ -324,6 +324,7 @@ export default class BugDetail extends React.Component {
                                                         screenTitle = {this.props.route.params.screenTitle}
                                                         bugDetail={ this.props.route.params.bugDetail }
                                                         navigation={this.props.navigation}
+                                                        image={this.props.route.params.image}
                                         /> 
                                     )}
                         </ScrollView>

@@ -87,6 +87,7 @@ async function markResolved(props){
                                                 bugPoints: props.bugPoints,
                                                 id: props.bugID,
                                                 creatorName: props.bugCreator,
+                                                image: props.image
                                             }
         }]
     }) 
