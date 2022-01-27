@@ -111,6 +111,7 @@ export default class AddSolution extends React.Component {
                                                                     bugPoints: this.props.route.params.bugPoints,
                                                                     id: this.props.route.params.bugID,
                                                                     creatorName: this.props.route.params.creatorName,
+                                                                    image:this.props.route.params.image
                                                                 }
                             }]
                         })    

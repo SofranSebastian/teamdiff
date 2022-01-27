@@ -112,6 +112,7 @@ export default class BugDetail extends React.Component {
             bugPoints: this.props.route.params.bugPoints,
             bugID: this.state.bugID,
             creatorName: this.state.creator,
+            image:this.props.route.params.image
         })
     }
 
@@ -122,6 +123,7 @@ export default class BugDetail extends React.Component {
             bugPoints: this.props.route.params.bugPoints,
             bugID: this.state.bugID,
             creatorName: this.props.route.params.creatorName,
+            image:this.props.route.params.image
         })
     }
 

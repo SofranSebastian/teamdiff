@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, SafeAreaView, FlatList } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { IconButton, ActivityIndicator } from 'react-native-paper';
 import { db } from "../db/firebaseDB";
 import { bugsCol, usersCol } from "../db/firebaseDB";
 import { getDocs, query, orderBy, doc, getDoc, onSnapshot } from "firebase/firestore";
@@ -22,7 +22,9 @@ export default class Home extends React.Component {
         this.state = {
           stateBugsArray: [],
           refresh: false,
-          newNotifications: false
+          newNotifications: false,
+          areNewsReady: false,
+          areBugsReady: false
         }
     }
 
@@ -90,12 +92,14 @@ export default class Home extends React.Component {
             .then( 
                 (response) => response.json()
             ).then( (responseData) => {
-                    this.data = responseData.news
+                    this.data = responseData.news;
+                    this.setState({ areNewsReady: true });
                 }
             )
             .catch(err => {
                 console.error(err);
             });
+
         //this.data = dummyData.news;
 
         // for( var i in dummyData.news.length){
@@ -106,7 +110,7 @@ export default class Home extends React.Component {
         await this.getNotifications();
         await this.getBugs();
         //this.data = dummyData.news;
-        this.setState({ stateBugsArray: this.bugsFromFirestore })
+        this.setState({ stateBugsArray: this.bugsFromFirestore, areBugsReady: true });
     }
 
     checkIfItIsMyBug( ownerID ){
@@ -144,46 +148,57 @@ export default class Home extends React.Component {
                       <View style={{backgroundColor:"#262731", marginLeft:5, marginBottom:5, marginTop:10, alignSelf:'flex-start', borderRadius:20}}>
                         <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>📰    TECH NEWS</Text>
                       </View>
-                      <FlatList   scrollEnabled={ true }
-                                  horizontal={ true }
-                                  showsHorizontalScrollIndicator={ false }
-                                  data={ this.data }
-                                  renderItem={ ({item}) => <CardNews  title={ item.title }
-                                                                      urlToImage={ item.urlToImage }
-                                                                      url={ item.url }
-                                                          /> 
-                                          }
-                                  keyExtractor={ item => item.publishedAt}
-                      />
+                      { this.state.areNewsReady === false ? 
+                        <ActivityIndicator animating={!this.state.areNewsReady} color={"#262731"} />
+
+                        :
+
+                        <FlatList   scrollEnabled={ true }
+                                    horizontal={ true }
+                                    showsHorizontalScrollIndicator={ false }
+                                    data={ this.data }
+                                    renderItem={ ({item}) => <CardNews  title={ item.title }
+                                                                        urlToImage={ item.urlToImage }
+                                                                        url={ item.url }
+                                                            /> 
+                                            }
+                                    keyExtractor={ item => item.publishedAt}
+                        />
+                      }
                     </View>
                     <View style={{backgroundColor:"#262731", marginLeft:5, marginBottom:5, alignSelf:'flex-start', borderRadius:20}}>
                       <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:10, fontFamily:'normal-font', fontWeight:'bold', color:"white" }}>☠️   BUGS TO BE KILLED</Text>
                     </View>
                     <View style={{flex:0.45}}>
+                      { this.state.areBugsReady === false ? 
+                        <ActivityIndicator animating={!this.state.areBugsReady} color={"#262731"} />
+                        :
+                        <View>
                         { this.state.stateBugsArray.length === 0 ? 
                           <Text style={{  paddingHorizontal:10, paddingVertical:5, fontSize:12, fontFamily:'normal-font', color:"gray" }}>
                             No bugs yet.
                           </Text>
                         :
-                          null
-                        }
-                        <FlatList   scrollEnabled={ true }
-                                    data={ this.state.stateBugsArray }
-                                    renderItem={ ({item}) => <CardBugs  title={ item.title }
-                                                                        cost={ item.cost }
-                                                                        description={ item.description }
-                                                                        navigation={ this.props.navigation }
-                                                                        category={ item.category }
-                                                                        needToSeeIfItIsResolved={ false }
-                                                                        isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
-                                                                        id = { item.id }
-                                                                        image = { item.imageURI}
-                                                            /> 
-                                            }
-                                    refreshing={this.state.refresh}
-                                    onRefresh={()=> this._onRefresh()}
-                                    keyExtractor={ item => item.id}
+                          <FlatList   scrollEnabled={ true }
+                                      data={ this.state.stateBugsArray }
+                                      renderItem={ ({item}) => <CardBugs  title={ item.title }
+                                                                          cost={ item.cost }
+                                                                          description={ item.description }
+                                                                          navigation={ this.props.navigation }
+                                                                          category={ item.category }
+                                                                          needToSeeIfItIsResolved={ false }
+                                                                          isMyBug={ this.checkIfItIsMyBug(item.ownerID) }
+                                                                          id = { item.id }
+                                                                          image = { item.imageURI}
+                                                              /> 
+                                              }
+                                      refreshing={this.state.refresh}
+                                      onRefresh={()=> this._onRefresh()}
+                                      keyExtractor={ item => item.id}
                           />
+                        }
+                        </View>
+                      }
                       </View>
                     <BottomTabNavigator navigation={this.props.navigation} newNotifications={this.state.newNotifications}/>
                 </SafeAreaView> 
